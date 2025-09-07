@@ -125,7 +125,7 @@ export default function Footer() {
         {/* Terminal-style signature */}
         <div className="mt-6 text-center">
           <p className="text-terminal-green font-mono text-xs">
-            <span className="opacity-60">~/nischal-portfolio $</span> echo "Thank you for visiting!" 
+            <span className="opacity-60">~/nischal-portfolio $</span> echo &quot;Thank you for visiting!&quot; 
             <span className="animate-blink">|</span>
           </p>
         </div>

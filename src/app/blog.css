@@ -1,0 +1,166 @@
+/* Blog content styling for Hashnode HTML content */
+.blog-content {
+  @apply text-text-secondary;
+}
+
+.blog-content h1,
+.blog-content h2,
+.blog-content h3,
+.blog-content h4,
+.blog-content h5,
+.blog-content h6 {
+  @apply text-text-primary font-bold mt-8 mb-4;
+}
+
+.blog-content h1 {
+  @apply text-3xl md:text-4xl;
+}
+
+.blog-content h2 {
+  @apply text-2xl md:text-3xl text-terminal-green;
+}
+
+.blog-content h3 {
+  @apply text-xl md:text-2xl text-terminal-blue;
+}
+
+.blog-content h4 {
+  @apply text-lg md:text-xl text-terminal-purple;
+}
+
+.blog-content p {
+  @apply mb-4 leading-relaxed;
+}
+
+.blog-content a {
+  @apply text-terminal-blue hover:text-terminal-green transition-colors underline;
+}
+
+.blog-content strong,
+.blog-content b {
+  @apply font-semibold text-text-primary;
+}
+
+.blog-content em,
+.blog-content i {
+  @apply italic;
+}
+
+.blog-content ul,
+.blog-content ol {
+  @apply mb-4 ml-6;
+}
+
+.blog-content li {
+  @apply mb-2;
+}
+
+.blog-content ul li {
+  @apply list-disc;
+}
+
+.blog-content ol li {
+  @apply list-decimal;
+}
+
+.blog-content blockquote {
+  @apply border-l-4 border-terminal-green pl-4 my-6 italic text-text-muted bg-bg-light p-4 rounded-r-lg;
+}
+
+.blog-content code {
+  @apply bg-bg-dark text-terminal-green px-2 py-1 rounded text-sm font-mono;
+}
+
+.blog-content pre {
+  @apply bg-bg-dark p-4 rounded-lg overflow-x-auto mb-4 border border-terminal-green/20;
+}
+
+.blog-content pre code {
+  @apply bg-transparent p-0;
+}
+
+.blog-content img {
+  @apply rounded-lg my-6 mx-auto max-w-full h-auto;
+}
+
+.blog-content table {
+  @apply w-full border-collapse border border-terminal-green/20 mb-4;
+}
+
+.blog-content th,
+.blog-content td {
+  @apply border border-terminal-green/20 p-2 text-left;
+}
+
+.blog-content th {
+  @apply bg-bg-light font-semibold text-text-primary;
+}
+
+.blog-content hr {
+  @apply border-terminal-green/30 my-8;
+}
+
+/* Syntax highlighting for code blocks */
+.blog-content .hljs {
+  @apply bg-bg-dark;
+}
+
+.blog-content .hljs-comment,
+.blog-content .hljs-quote {
+  @apply text-text-muted;
+}
+
+.blog-content .hljs-keyword,
+.blog-content .hljs-selector-tag,
+.blog-content .hljs-addition {
+  @apply text-terminal-green;
+}
+
+.blog-content .hljs-number,
+.blog-content .hljs-string,
+.blog-content .hljs-meta .hljs-meta-string,
+.blog-content .hljs-literal,
+.blog-content .hljs-doctag,
+.blog-content .hljs-regexp {
+  @apply text-terminal-blue;
+}
+
+.blog-content .hljs-title,
+.blog-content .hljs-section,
+.blog-content .hljs-name,
+.blog-content .hljs-selector-id,
+.blog-content .hljs-selector-class {
+  @apply text-terminal-purple;
+}
+
+.blog-content .hljs-attribute,
+.blog-content .hljs-attr,
+.blog-content .hljs-variable,
+.blog-content .hljs-template-variable,
+.blog-content .hljs-class .hljs-title,
+.blog-content .hljs-type {
+  @apply text-terminal-orange;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .blog-content {
+    @apply text-sm;
+  }
+  
+  .blog-content h1 {
+    @apply text-2xl;
+  }
+  
+  .blog-content h2 {
+    @apply text-xl;
+  }
+  
+  .blog-content h3 {
+    @apply text-lg;
+  }
+  
+  .blog-content pre {
+    @apply text-xs;
+  }
+}

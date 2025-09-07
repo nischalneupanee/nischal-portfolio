@@ -194,9 +194,9 @@ export default function SkillsProjects() {
         {/* Terminal Quote */}
         <section className="mt-20 text-center">
           <div className="glass rounded-lg p-8 font-mono">
-            <div className="text-terminal-green mb-4">nischal@skills:~$ echo "philosophy"</div>
+            <div className="text-terminal-green mb-4">nischal@skills:~$ echo &quot;philosophy&quot;</div>
             <blockquote className="text-xl text-text-primary font-semibold">
-              "Code is poetry written in logic, and every bug is a step closer to perfection."
+              &quot;Code is poetry written in logic, and every bug is a step closer to perfection.&quot;
             </blockquote>
           </div>
         </section>

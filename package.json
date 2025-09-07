@@ -1,7 +1,7 @@
 {
   "name": "nischal-portfolio",
-  "version": "1.0.1",
-  "description": "Nischal Neupane's personal portfolio website",
+  "version": "1.0.2",
+  "description": "Nischal Neupane's personal portfolio website with integrated Hashnode blog",
   "author": "Nischal Neupane <nischalneupanee@gmail.com>",
   "homepage": "https://www.nischalneupane.name.np",
   "repository": {
@@ -14,6 +14,9 @@
     "nextjs",
     "typescript",
     "tailwindcss",
+    "hashnode",
+    "blog",
+    "headless-cms",
     "nischal-neupane"
   ],
   "private": false,
@@ -21,7 +24,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "setup:hashnode": "./scripts/setup-hashnode.sh",
+    "test:hashnode": "npx tsx scripts/test-hashnode.ts",
+    "cache:debug": "NEXT_PRIVATE_DEBUG_CACHE=1 npm run dev"
   },
   "dependencies": {
     "framer-motion": "^12.23.12",
@@ -42,6 +48,7 @@
     "eslint-config-next": "14.2.5",
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
+    "tsx": "^4.20.5",
     "typescript": "^5"
   }
 }

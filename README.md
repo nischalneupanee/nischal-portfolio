@@ -1,31 +1,39 @@
-# Nischal Neupane Portfolio v1.0.1 
+# 🚀 Nischal Portfolio v1.0.2
 
-Personal Portfolio website for showcasing my projects, skills and blogs.
+Personal Portfolio website with integrated Hashnode headless blog, showcasing projects, skills, and dynamic content.
 
 ![Portfolio Preview](./public/Website%20Profile.png)
 
 ## 📋 Version Information
 
-- **Version**: 1.0.1
+- **Version**: 1.0.2
 - **Release Date**: September 7, 2025
 - **Status**: Production Ready ✅
 - **Live Demo**: [nischalneupane.name.np](https://www.nischalneupane.name.np)
 
 ## ✨ Features
 
+### 🎨 Portfolio
 - **Futuristic Design**: TerminalCSS-inspired theme with particle background effects
 - **Fully Responsive**: Mobile-first design that works on all devices
 - **Interactive Animations**: Smooth transitions using Framer Motion
 - **Multi-page Structure**: Home, About, Skills & Projects, Blog, Contact
-- **Blog Integration**: Ready for Hashnode integration via GraphQL API
 - **SEO Optimized**: Comprehensive meta tags and Open Graph support
 - **Performance Focused**: Optimized images, lazy loading, and code splitting
 - **Accessibility**: Semantic HTML and ARIA-compliant components
 
-## 🛠 Tech Stack
+### � Hashnode Blog Integration (NEW in v1.0.2)
+- **Headless CMS**: Seamlessly integrated with Hashnode GraphQL API v2.0
+- **Real-time Updates**: Webhook-driven content synchronization
+- **ISR (Incremental Static Regeneration)**: Optimal performance with automatic page updates
+- **SEO Optimized**: Automatic sitemap and RSS feed generation
+- **Advanced Features**: Search, analytics, related posts, and comments support
+- **Smart Caching**: Tagged cache invalidation for efficient updates
+
+## �🛠 Tech Stack
 
 ### Frontend
-- **Next.js 14.2.5** - React framework with App Router
+- **Next.js 14.2.32** - React framework with App Router
 - **TypeScript** - Type-safe development
 - **TailwindCSS** - Utility-first CSS framework
 - **Terminal.css** - Terminal-inspired design system
@@ -33,14 +41,20 @@ Personal Portfolio website for showcasing my projects, skills and blogs.
 - **Particles.js** - Interactive particle background
 - **Lucide React** - Beautiful icons
 
+### Blog Integration
+- **Hashnode GraphQL API v2.0** - Headless CMS
+- **GraphQL Request** - Efficient API client
+- **ISR Caching** - Smart content revalidation
+
 ### Development Tools
 - **ESLint** - Code linting
 - **PostCSS** - CSS processing
 - **Autoprefixer** - CSS vendor prefixes
+- **tsx** - TypeScript execution for scripts
 
 ### Deployment Ready
 - **Vercel** - Optimized for Vercel deployment
-- **GitHub Actions** - CI/CD pipeline ready
+- **Webhook Support** - Real-time content updates
 
 ## 🚀 Getting Started
 
@@ -52,8 +66,8 @@ Personal Portfolio website for showcasing my projects, skills and blogs.
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/nischalneupanee/portfolio.git
-   cd portfolio
+   git clone https://github.com/nischalneupanee/nischal-portfolio.git
+   cd nischal-portfolio
    ```
 
 2. **Install dependencies**
@@ -61,13 +75,46 @@ Personal Portfolio website for showcasing my projects, skills and blogs.
    npm install
    ```
 
-3. **Start development server**
+3. **Configure environment variables**
+   ```bash
+   cp .env.example .env.local
+   ```
+   Edit `.env.local` with your configuration (see Environment Variables section)
+
+4. **Start development server**
    ```bash
    npm run dev
    ```
 
-4. **Open your browser**
+5. **Open your browser**
    Navigate to [http://localhost:3000](http://localhost:3000)
+
+## 🔧 Environment Variables
+
+### Required for Basic Functionality (Configure Now)
+
+```bash
+# Your Hashnode publication domain
+NEXT_PUBLIC_HASHNODE_PUBLICATION=yourusername.hashnode.dev
+
+# Hashnode GraphQL endpoint (default is fine)
+NEXT_PUBLIC_HASHNODE_GQL_END=https://gql.hashnode.com
+```
+
+### Optional (Configure After Deployment in Vercel)
+
+```bash
+# Your live domain (after deployment)
+NEXT_PUBLIC_SITE_URL=https://your-domain.com
+
+# Hashnode Personal Access Token (for enhanced features)
+# Get from: https://hashnode.com/settings/developer
+HASHNODE_PAT=your_hashnode_personal_access_token
+
+# Security secrets (generate using: openssl rand -hex 32)
+HASHNODE_WEBHOOK_SECRET=your_webhook_secret
+REVALIDATE_SECRET=your_revalidate_secret
+```
 
 ### Build for Production
 
@@ -76,22 +123,52 @@ npm run build
 npm start
 ```
 
-## � Deployment
+## 🚀 Deployment
 
 ### Quick Deploy to Vercel
 
 1. **Push to GitHub**
    ```bash
    git add .
-   git commit -m "feat: initial portfolio v1.0.0"
+   git commit -m "feat: portfolio v1.0.2 with Hashnode integration"
    git push origin main
    ```
 
 2. **Deploy to Vercel**
    - Go to [vercel.com](https://vercel.com)
    - Import your GitHub repository
-   - Configure your custom domain
+   - Configure environment variables in Vercel dashboard
    - Deploy automatically
+
+3. **Post-Deployment Setup**
+   - Update `NEXT_PUBLIC_SITE_URL` with your actual domain
+   - Generate secure secrets for webhooks and revalidation
+   - Configure Hashnode webhooks (see Hashnode Integration section)
+
+### Hashnode Integration Setup
+
+1. **Configure Webhooks in Hashnode**
+   - Go to your Hashnode dashboard → Blog Settings → Integrations
+   - Add webhook URL: `https://yourdomain.com/api/webhook/hashnode`
+   - Use the `HASHNODE_WEBHOOK_SECRET` you configured in Vercel
+
+2. **Generate Security Secrets**
+   ```bash
+   # Generate webhook secret
+   openssl rand -hex 32
+   
+   # Generate revalidation secret
+   openssl rand -hex 32
+   ```
+
+3. **Test Integration**
+   ```bash
+   # Test Hashnode connection
+   npm run test:hashnode
+   
+   # Test manual revalidation
+   curl "https://yourdomain.com/api/revalidate?secret=YOUR_REVALIDATE_SECRET"
+   ```
 
 ### Manual GitHub Setup
 
@@ -103,10 +180,10 @@ git init
 git add .
 
 # Commit with version tag
-git commit -m "feat: nischal-portfolio v1.0.0 - initial release"
+git commit -m "feat: nischal-portfolio v1.0.2 - Hashnode integration"
 
 # Add GitHub remote
-git remote add origin https://github.com/nischalneupanee/portfolio.git
+git remote add origin https://github.com/nischalneupanee/nischal-portfolio.git
 
 # Push to GitHub
 git branch -M main

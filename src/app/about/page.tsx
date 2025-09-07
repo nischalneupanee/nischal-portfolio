@@ -110,18 +110,18 @@ export default function About() {
               </h2>
               <div className="space-y-4 text-text-secondary">
                 <p>
-                  Hello! I'm <span className="text-terminal-green font-semibold">Nischal Neupane</span>, 
+                  Hello! I&apos;m <span className="text-terminal-green font-semibold">Nischal Neupane</span>, 
                   a passionate CSIT student from the beautiful city of Kathmandu, Nepal. My journey in 
                   technology began with curiosity and has evolved into a deep passion for creating 
                   innovative solutions using artificial intelligence and machine learning.
                 </p>
                 <p>
-                  Currently pursuing my Bachelor's degree in Computer Science and Information Technology 
-                  at Vedas College, I'm constantly exploring the fascinating world of data science, 
+                  Currently pursuing my Bachelor&apos;s degree in Computer Science and Information Technology 
+                  at Vedas College, I&apos;m constantly exploring the fascinating world of data science, 
                   machine learning algorithms, and their real-world applications.
                 </p>
                 <p>
-                  When I'm not coding or studying, you'll find me contributing to open source projects, 
+                  When I&apos;m not coding or studying, you&apos;ll find me contributing to open source projects, 
                   attending tech conferences, playing games, or listening to music. I believe in 
                   continuous learning and sharing knowledge with the community.
                 </p>
@@ -271,7 +271,7 @@ export default function About() {
             </h3>
             <p className="text-text-secondary max-w-2xl mx-auto">
               Currently focused on my studies and building strong foundations in AI/ML and Data Science. 
-              I'm excited to contribute my skills and passion to meaningful projects and collaborate 
+              I&apos;m excited to contribute my skills and passion to meaningful projects and collaborate 
               with amazing teams in the future.
             </p>
             <div className="mt-6">
@@ -288,9 +288,9 @@ export default function About() {
           variants={itemVariants}
         >
           <div className="glass rounded-lg p-8 font-mono">
-            <div className="text-terminal-green mb-4">nischal@about:~$ echo "life_motto"</div>
+            <div className="text-terminal-green mb-4">nischal@about:~$ echo &quot;life_motto&quot;</div>
             <blockquote className="text-xl md:text-2xl text-text-primary font-semibold">
-              "The future belongs to those who learn more skills and combine them in creative ways."
+              &quot;The future belongs to those who learn more skills and combine them in creative ways.&quot;
             </blockquote>
             <div className="text-terminal-blue mt-4">- Nischal Neupane</div>
           </div>

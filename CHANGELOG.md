@@ -5,6 +5,51 @@ All notable changes to Nischal Neupane Portfolio will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.2] - 2025-09-07
+
+### ✨ Major Feature: Hashnode Headless Blog Integration
+
+#### Added
+- **Complete Hashnode GraphQL API v2.0 Integration**
+  - Dynamic blog listing page at `/blog`
+  - Individual blog post pages at `/blog/[slug]`
+  - Real-time webhook support for content updates
+  - ISR (Incremental Static Regeneration) with smart caching
+  - Automatic sitemap and RSS feed generation
+  - Search functionality for blog posts
+  - Related posts suggestions
+  - Comments and analytics support
+
+- **Advanced Performance Features**
+  - Tagged cache invalidation with `unstable_cache`
+  - Static generation for all blog posts
+  - Webhook-driven revalidation at `/api/webhook/hashnode`
+  - Manual revalidation endpoint at `/api/revalidate`
+  - Optimized GraphQL queries with proper error handling
+
+- **New Dependencies**
+  - `graphql-request@6.1.0` - Efficient GraphQL client
+  - `tsx@4.20.5` - TypeScript execution for scripts
+
+#### Enhanced
+- **Developer Experience**
+  - Comprehensive testing scripts for Hashnode integration
+  - Environment variable documentation and examples
+  - Debug mode for ISR caching
+  - TypeScript types for all blog data structures
+
+- **SEO & Content**
+  - SEO-optimized meta tags for all blog content
+  - Automatic sitemap generation including blog posts
+  - RSS feed for blog syndication
+  - Open Graph images from Hashnode
+
+#### Fixed
+- GraphQL schema compatibility issues
+- Build process optimization for production
+- Mobile responsiveness for blog components
+- TypeScript compilation issues
+
 ## [1.0.1] - 2025-09-07
 
 ### 🔧 Dependencies & Security Updates

@@ -1,22 +1,35 @@
 import { Calendar, Clock, ExternalLink, BookOpen, Users, TrendingUp } from 'lucide-react';
-import { getBlogPosts, getPublicationStats, type BlogPost } from '@/lib/hashnode';
+import { getBlogPosts, getPublicationStats, getAllTags, getFeaturedPosts, getPopularPosts, type BlogPost } from '@/lib/hashnode';
 import Image from 'next/image';
+import BlogContainer from '@/components/BlogContainer';
+
+// Enable ISR for the blog page
+export const revalidate = 1800; // 30 minutes
 
 // Blog page component with server-side data fetching
 export default async function Blog() {
   let posts: BlogPost[] = [];
+  let featuredPosts: BlogPost[] = [];
+  let popularPosts: BlogPost[] = [];
   let stats = null;
+  let availableTags: string[] = [];
   let error = null;
 
   try {
-    // Fetch blog posts and stats in parallel
-    const [postsData, statsData] = await Promise.all([
+    // Fetch blog data in parallel for better performance
+    const [postsData, statsData, tagsData, featuredData, popularData] = await Promise.all([
       getBlogPosts(6),
-      getPublicationStats()
+      getPublicationStats(),
+      getAllTags(),
+      getFeaturedPosts(3),
+      getPopularPosts(3)
     ]);
     
     posts = postsData.publication.posts.edges.map(edge => edge.node);
     stats = statsData;
+    availableTags = tagsData.map(tag => tag.name);
+    featuredPosts = featuredData;
+    popularPosts = popularData;
   } catch (err) {
     console.error('Failed to fetch blog data:', err);
     error = 'Failed to load blog posts. Please try again later.';
@@ -92,105 +105,9 @@ export default async function Blog() {
           </section>
         )}
 
-        {/* Featured Posts */}
-        {!error && posts.length > 0 && (
-          <section className="mb-16">
-            <h2 className="text-3xl font-bold text-terminal-blue mb-12 text-center terminal-glow">
-              Latest Articles
-            </h2>
-            <div className="space-y-8">
-              {posts.map((post: BlogPost, index: number) => (
-              <article key={post.id} className="glass rounded-lg overflow-hidden hover-glow group">
-                <div className="md:flex">
-                  {/* Cover Image */}
-                  <div className="md:w-1/3">
-                    <div className="h-48 md:h-full relative overflow-hidden">
-                      {post.coverImage?.url ? (
-                        <Image
-                          src={post.coverImage.url}
-                          alt={post.title}
-                          fill
-                          className="object-cover group-hover:scale-110 transition-transform duration-300"
-                        />
-                      ) : (
-                        <Image
-                          src="/project1.jpeg"
-                          alt={post.title}
-                          fill
-                          className="object-cover group-hover:scale-110 transition-transform duration-300"
-                        />
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Content */}
-                  <div className="md:w-2/3 p-6">
-                    <div className="flex items-center space-x-4 text-text-muted text-sm mb-3">
-                      <div className="flex items-center space-x-1">
-                        <Calendar className="w-4 h-4" />
-                        <span>{new Date(post.publishedAt).toLocaleDateString()}</span>
-                      </div>
-                      <div className="flex items-center space-x-1">
-                        <Clock className="w-4 h-4" />
-                        <span>{post.readTimeInMinutes} min read</span>
-                      </div>
-                    </div>
-
-                    <h3 className="text-xl md:text-2xl font-semibold text-text-primary mb-3 group-hover:text-terminal-green transition-colors">
-                      {post.title}
-                    </h3>
-
-                    <p className="text-text-secondary mb-4 leading-relaxed">
-                      {post.brief}
-                    </p>
-
-                    {/* Tags */}
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {post.tags.map((tag: any, tagIndex: number) => (
-                        <span
-                          key={tagIndex}
-                          className="px-2 py-1 bg-terminal-green/20 text-terminal-green rounded text-xs font-medium"
-                        >
-                          #{tag.name}
-                        </span>
-                      ))}
-                    </div>
-
-                    {/* Read More Link */}
-                    <a
-                      href={post.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center space-x-2 text-terminal-blue hover:text-terminal-green transition-colors font-medium"
-                    >
-                      <span>Read Full Article</span>
-                      <ExternalLink className="w-4 h-4" />
-                    </a>
-                  </div>
-                </div>
-              </article>
-            ))}
-          </div>
-        </section>
-        )}
-
-        {/* Empty State */}
-        {!error && posts.length === 0 && (
-          <section className="mb-16">
-            <div className="glass rounded-lg p-8 text-center">
-              <div className="text-terminal-blue mb-4">📝</div>
-              <h3 className="text-xl font-semibold text-terminal-blue mb-2">No Blog Posts Found</h3>
-              <p className="text-text-secondary mb-4">I haven't published any articles yet, but stay tuned!</p>
-              <a
-                href="https://nischalneupane.hashnode.dev"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-terminal-blue hover:text-terminal-blue/80 underline"
-              >
-                Visit my blog to see when new content is available
-              </a>
-            </div>
-          </section>
+        {/* Blog Posts with Search and Filter */}
+        {!error && (
+          <BlogContainer initialPosts={posts} availableTags={availableTags} />
         )}
 
         {/* Blog Topics */}
@@ -223,7 +140,7 @@ export default async function Blog() {
             </h2>
             <p className="text-text-secondary mb-6 max-w-2xl mx-auto">
               Follow my blog on Hashnode to get notified about new articles on AI/ML, Data Science, 
-              and my journey as a CSIT student. Let's learn and grow together!
+              and my journey as a CSIT student. Let&apos;s learn and grow together!
             </p>
             <div className="flex justify-center space-x-4">
               <a
@@ -249,9 +166,9 @@ export default async function Blog() {
         {/* Terminal Command */}
         <section className="text-center">
           <div className="glass rounded-lg p-8 font-mono">
-            <div className="text-terminal-green mb-4">nischal@blog:~$ echo "writing_motivation"</div>
+            <div className="text-terminal-green mb-4">nischal@blog:~$ echo &quot;writing_motivation&quot;</div>
             <blockquote className="text-xl text-text-primary font-semibold">
-              "Sharing knowledge is the best way to multiply it. Every article is a step towards collective learning."
+              &quot;Sharing knowledge is the best way to multiply it. Every article is a step towards collective learning.&quot;
             </blockquote>
           </div>
         </section>

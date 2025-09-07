@@ -60,7 +60,7 @@ export default function Contact() {
             <span className="text-terminal-green terminal-glow">$ ping /contact</span>
           </h1>
           <p className="text-xl text-text-secondary max-w-2xl mx-auto">
-            Let's connect! I'm always excited to discuss AI/ML, collaborate on projects, 
+            Let&apos;s connect! I&apos;m always excited to discuss AI/ML, collaborate on projects, 
             or just chat about technology and learning.
           </p>
         </div>
@@ -163,7 +163,7 @@ export default function Contact() {
         {/* Collaboration Areas */}
         <section className="mb-16">
           <h2 className="text-3xl font-bold text-terminal-orange mb-12 text-center terminal-glow">
-            Let's Collaborate On
+            Let&apos;s Collaborate On
           </h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
             {collaborationAreas.map((area, index) => (
@@ -218,7 +218,7 @@ export default function Contact() {
               <div>
                 <h3 className="text-lg font-semibold text-terminal-orange mb-4">ℹ️ Please note:</h3>
                 <ul className="space-y-2 text-text-secondary text-sm">
-                  <li>• I'm currently a student, so responses may take 1-2 days</li>
+                  <li>• I&apos;m currently a student, so responses may take 1-2 days</li>
                   <li>• For urgent matters, please mark your subject as [URGENT]</li>
                   <li>• I love discussing AI/ML and always happy to help fellow learners</li>
                   <li>• Open to remote collaboration across different timezones</li>
@@ -232,9 +232,9 @@ export default function Contact() {
         {/* Terminal Quote */}
         <section className="text-center">
           <div className="glass rounded-lg p-8 font-mono">
-            <div className="text-terminal-green mb-4">nischal@contact:~$ echo "connection_philosophy"</div>
+            <div className="text-terminal-green mb-4">nischal@contact:~$ echo &quot;connection_philosophy&quot;</div>
             <blockquote className="text-xl text-text-primary font-semibold">
-              "The best ideas emerge from collaboration. Let's build something amazing together!"
+              &quot;The best ideas emerge from collaboration. Let&apos;s build something amazing together!&quot;
             </blockquote>
           </div>
         </section>

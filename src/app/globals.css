@@ -142,3 +142,151 @@ body {
     text-wrap: balance;
   }
 }
+
+/* Blog content styling for Hashnode HTML content */
+.blog-content {
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+.blog-content h1,
+.blog-content h2,
+.blog-content h3,
+.blog-content h4,
+.blog-content h5,
+.blog-content h6 {
+  color: var(--text-primary);
+  font-weight: bold;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+.blog-content h1 {
+  font-size: 2rem;
+}
+
+.blog-content h2 {
+  font-size: 1.75rem;
+  color: var(--terminal-green);
+}
+
+.blog-content h3 {
+  font-size: 1.5rem;
+  color: var(--terminal-blue);
+}
+
+.blog-content h4 {
+  font-size: 1.25rem;
+  color: var(--terminal-purple);
+}
+
+.blog-content p {
+  margin-bottom: 1rem;
+  line-height: 1.7;
+}
+
+.blog-content a {
+  color: var(--terminal-blue);
+  transition: color 0.2s ease;
+  text-decoration: underline;
+}
+
+.blog-content a:hover {
+  color: var(--terminal-green);
+}
+
+.blog-content strong,
+.blog-content b {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.blog-content em,
+.blog-content i {
+  font-style: italic;
+}
+
+.blog-content ul,
+.blog-content ol {
+  margin-bottom: 1rem;
+  margin-left: 1.5rem;
+}
+
+.blog-content li {
+  margin-bottom: 0.5rem;
+}
+
+.blog-content ul li {
+  list-style-type: disc;
+}
+
+.blog-content ol li {
+  list-style-type: decimal;
+}
+
+.blog-content blockquote {
+  border-left: 4px solid var(--terminal-green);
+  padding-left: 1rem;
+  margin: 1.5rem 0;
+  font-style: italic;
+  background-color: rgba(26, 31, 46, 0.5);
+  padding: 1rem;
+  border-radius: 0 0.5rem 0.5rem 0;
+  color: var(--text-muted);
+}
+
+.blog-content code {
+  background-color: var(--bg-darker);
+  color: var(--terminal-green);
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  font-family: 'Fira Code', monospace;
+}
+
+.blog-content pre {
+  background-color: var(--bg-darker);
+  border: 1px solid rgba(0, 255, 65, 0.2);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  margin-bottom: 1rem;
+}
+
+.blog-content pre code {
+  background: transparent;
+  padding: 0;
+}
+
+.blog-content img {
+  border-radius: 0.5rem;
+  margin: 1.5rem auto;
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+.blog-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1rem;
+  border: 1px solid rgba(0, 255, 65, 0.2);
+}
+
+.blog-content th,
+.blog-content td {
+  padding: 0.5rem;
+  text-align: left;
+  border: 1px solid rgba(0, 255, 65, 0.2);
+}
+
+.blog-content th {
+  background-color: var(--bg-darker);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.blog-content hr {
+  border-color: rgba(0, 255, 65, 0.3);
+  margin: 2rem 0;
+}
