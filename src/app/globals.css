@@ -2,6 +2,117 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Import Terminal CSS */
+@import 'terminal.css/dist/terminal.min.css';
+
+/* Custom AI/ML Theme Variables */
+:root {
+  --terminal-green: #00ff41;
+  --terminal-blue: #0099ff;
+  --terminal-purple: #9966ff;
+  --terminal-orange: #ff9900;
+  --bg-dark: #0a0a0a;
+  --bg-darker: #050505;
+  --text-primary: #ffffff;
+  --text-secondary: #cccccc;
+  --text-muted: #888888;
+}
+
+/* Global Styles */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg-dark);
+  color: var(--text-primary);
+  font-family: 'Fira Code', 'Monaco', 'Menlo', monospace;
+  overflow-x: hidden;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-darker);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--terminal-green);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--terminal-blue);
+}
+
+/* Terminal-like glow effects */
+.terminal-glow {
+  text-shadow: 0 0 10px currentColor;
+}
+
+.ai-gradient {
+  background: linear-gradient(45deg, var(--terminal-green), var(--terminal-blue), var(--terminal-purple));
+  background-size: 300% 300%;
+  animation: gradient-shift 3s ease infinite;
+}
+
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Typing animation */
+.typing-animation::after {
+  content: '|';
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+/* Particle canvas positioning */
+#particles-js {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+/* Glassmorphism effect */
+.glass {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Hover effects */
+.hover-glow:hover {
+  box-shadow: 0 0 20px var(--terminal-green);
+  transition: box-shadow 0.3s ease;
+}
+
+/* Code block styling */
+pre {
+  background: var(--bg-darker);
+  border: 1px solid var(--terminal-green);
+  border-radius: 8px;
+  padding: 1rem;
+  overflow-x: auto;
+}
+
+code {
+  color: var(--terminal-green);
+  font-family: 'Fira Code', monospace;
+}
+
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;

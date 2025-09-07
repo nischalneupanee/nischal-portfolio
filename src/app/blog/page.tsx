@@ -1,0 +1,234 @@
+import { Calendar, Clock, ExternalLink, BookOpen } from 'lucide-react';
+
+// Mock blog posts for demo - replace with actual Hashnode API call
+const mockPosts = [
+  {
+    id: '1',
+    title: 'Getting Started with Machine Learning: A Beginner\'s Journey',
+    brief: 'Exploring the fundamentals of machine learning and my first steps into this fascinating field of AI.',
+    publishedAt: '2024-08-15',
+    readTimeInMinutes: 5,
+    url: 'https://nischalneupanee.hashnode.dev/getting-started-with-ml',
+    coverImage: { url: '/project1.jpeg' },
+    tags: [
+      { name: 'Machine Learning', slug: 'machine-learning' },
+      { name: 'AI', slug: 'ai' },
+      { name: 'Beginner', slug: 'beginner' }
+    ]
+  },
+  {
+    id: '2',
+    title: 'Data Visualization with Python: Creating Meaningful Insights',
+    brief: 'Learn how to create compelling data visualizations using Python libraries like Matplotlib and Seaborn.',
+    publishedAt: '2024-08-10',
+    readTimeInMinutes: 8,
+    url: 'https://nischalneupanee.hashnode.dev/data-visualization-python',
+    coverImage: { url: '/project2.jpeg' },
+    tags: [
+      { name: 'Python', slug: 'python' },
+      { name: 'Data Science', slug: 'data-science' },
+      { name: 'Visualization', slug: 'visualization' }
+    ]
+  },
+  {
+    id: '3',
+    title: 'My Experience at Google DevFest 2024',
+    brief: 'Sharing insights and learnings from attending Google DevFest 2024 and networking with fellow developers.',
+    publishedAt: '2024-07-25',
+    readTimeInMinutes: 6,
+    url: 'https://nischalneupanee.hashnode.dev/google-devfest-2024',
+    coverImage: { url: '/project3.jpeg' },
+    tags: [
+      { name: 'Conference', slug: 'conference' },
+      { name: 'Google', slug: 'google' },
+      { name: 'Networking', slug: 'networking' }
+    ]
+  }
+];
+
+export default function Blog() {
+  return (
+    <div className="min-h-screen py-20 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-6xl mx-auto">
+        {/* Header */}
+        <div className="text-center mb-16">
+          <h1 className="text-4xl md:text-6xl font-bold mb-6">
+            <span className="text-terminal-green terminal-glow">$ cat /blog/</span>
+          </h1>
+          <p className="text-xl text-text-secondary max-w-2xl mx-auto mb-8">
+            Thoughts, tutorials, and insights on AI/ML, Data Science, and my journey as a CSIT student.
+          </p>
+          <div className="flex justify-center">
+            <a
+              href="https://nischalneupanee.hashnode.dev"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center space-x-2 px-6 py-3 bg-terminal-blue text-bg-dark font-semibold rounded-lg hover:bg-terminal-blue/80 transition-colors"
+            >
+              <BookOpen className="w-5 h-5" />
+              <span>Visit Full Blog</span>
+              <ExternalLink className="w-4 h-4" />
+            </a>
+          </div>
+        </div>
+
+        {/* Blog Stats */}
+        <section className="mb-16">
+          <div className="grid md:grid-cols-3 gap-6">
+            <div className="glass rounded-lg p-6 text-center">
+              <div className="text-2xl font-bold text-terminal-green mb-2">
+                {mockPosts.length}+
+              </div>
+              <p className="text-text-secondary">Articles Published</p>
+            </div>
+            <div className="glass rounded-lg p-6 text-center">
+              <div className="text-2xl font-bold text-terminal-blue mb-2">
+                AI/ML
+              </div>
+              <p className="text-text-secondary">Primary Focus</p>
+            </div>
+            <div className="glass rounded-lg p-6 text-center">
+              <div className="text-2xl font-bold text-terminal-purple mb-2">
+                {mockPosts.reduce((acc, post) => acc + post.readTimeInMinutes, 0)}
+              </div>
+              <p className="text-text-secondary">Minutes of Content</p>
+            </div>
+          </div>
+        </section>
+
+        {/* Featured Posts */}
+        <section className="mb-16">
+          <h2 className="text-3xl font-bold text-terminal-blue mb-12 text-center terminal-glow">
+            Latest Articles
+          </h2>
+          <div className="space-y-8">
+            {mockPosts.map((post, index) => (
+              <article key={post.id} className="glass rounded-lg overflow-hidden hover-glow group">
+                <div className="md:flex">
+                  {/* Cover Image */}
+                  <div className="md:w-1/3">
+                    <div className="h-48 md:h-full relative overflow-hidden">
+                      <img
+                        src={post.coverImage?.url || '/project1.jpeg'}
+                        alt={post.title}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Content */}
+                  <div className="md:w-2/3 p-6">
+                    <div className="flex items-center space-x-4 text-text-muted text-sm mb-3">
+                      <div className="flex items-center space-x-1">
+                        <Calendar className="w-4 h-4" />
+                        <span>{new Date(post.publishedAt).toLocaleDateString()}</span>
+                      </div>
+                      <div className="flex items-center space-x-1">
+                        <Clock className="w-4 h-4" />
+                        <span>{post.readTimeInMinutes} min read</span>
+                      </div>
+                    </div>
+
+                    <h3 className="text-xl md:text-2xl font-semibold text-text-primary mb-3 group-hover:text-terminal-green transition-colors">
+                      {post.title}
+                    </h3>
+
+                    <p className="text-text-secondary mb-4 leading-relaxed">
+                      {post.brief}
+                    </p>
+
+                    {/* Tags */}
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {post.tags.map((tag, tagIndex) => (
+                        <span
+                          key={tagIndex}
+                          className="px-2 py-1 bg-terminal-green/20 text-terminal-green rounded text-xs font-medium"
+                        >
+                          #{tag.name}
+                        </span>
+                      ))}
+                    </div>
+
+                    {/* Read More Link */}
+                    <a
+                      href={post.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center space-x-2 text-terminal-blue hover:text-terminal-green transition-colors font-medium"
+                    >
+                      <span>Read Full Article</span>
+                      <ExternalLink className="w-4 h-4" />
+                    </a>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        {/* Blog Topics */}
+        <section className="mb-16">
+          <h2 className="text-3xl font-bold text-terminal-purple mb-12 text-center terminal-glow">
+            Topics I Write About
+          </h2>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              { name: 'Machine Learning', count: '5+ posts', color: 'text-terminal-green' },
+              { name: 'Data Science', count: '3+ posts', color: 'text-terminal-blue' },
+              { name: 'Web Development', count: '2+ posts', color: 'text-terminal-purple' },
+              { name: 'Tech Events', count: '4+ posts', color: 'text-terminal-orange' }
+            ].map((topic, index) => (
+              <div key={index} className="glass rounded-lg p-4 text-center hover-glow">
+                <h3 className={`font-semibold mb-2 ${topic.color}`}>
+                  {topic.name}
+                </h3>
+                <p className="text-text-muted text-sm">{topic.count}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Newsletter Signup */}
+        <section className="mb-16">
+          <div className="glass rounded-lg p-8 text-center">
+            <h2 className="text-2xl font-bold text-terminal-green mb-4 terminal-glow">
+              Stay Updated
+            </h2>
+            <p className="text-text-secondary mb-6 max-w-2xl mx-auto">
+              Follow my blog on Hashnode to get notified about new articles on AI/ML, Data Science, 
+              and my journey as a CSIT student. Let's learn and grow together!
+            </p>
+            <div className="flex justify-center space-x-4">
+              <a
+                href="https://nischalneupanee.hashnode.dev"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-6 py-3 bg-terminal-green text-bg-dark font-semibold rounded-lg hover:bg-terminal-green/80 transition-colors"
+              >
+                Follow on Hashnode
+              </a>
+              <a
+                href="https://hashnode.com/@nischalneupanee"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-6 py-3 border-2 border-terminal-blue text-terminal-blue font-semibold rounded-lg hover:bg-terminal-blue hover:text-bg-dark transition-colors"
+              >
+                View Profile
+              </a>
+            </div>
+          </div>
+        </section>
+
+        {/* Terminal Command */}
+        <section className="text-center">
+          <div className="glass rounded-lg p-8 font-mono">
+            <div className="text-terminal-green mb-4">nischal@blog:~$ echo "writing_motivation"</div>
+            <blockquote className="text-xl text-text-primary font-semibold">
+              "Sharing knowledge is the best way to multiply it. Every article is a step towards collective learning."
+            </blockquote>
+          </div>
+        </section>
+      </div>
+    </div>
+  );
+}
