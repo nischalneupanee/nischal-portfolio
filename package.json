@@ -6,7 +6,7 @@
   "homepage": "https://www.nischalneupane.name.np",
   "repository": {
     "type": "git",
-    "url": "https://github.com/nischalneupanee/portfolio.git"
+    "url": "https://github.com/nischalneupanee/nischal-portfolio.git"
   },
   "keywords": ["portfolio", "ai-ml", "nextjs", "typescript", "tailwindcss", "nischal-neupane"],
   "private": false,

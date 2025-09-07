@@ -9,6 +9,7 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const firaCode = Fira_Code({ subsets: ["latin"], variable: "--font-fira-code" });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://www.nischalneupane.name.np'),
   title: "Nischal Neupane - AI/ML Developer & CSIT Student",
   description: "Portfolio of Nischal Neupane - CSIT student passionate about AI/ML, Data Science, and Open Source development.",
   keywords: [
