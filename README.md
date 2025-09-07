@@ -175,7 +175,7 @@ portfolio/
 - Portfolio: [nischalneupane.name.np](https://www.nischalneupane.name.np)
 - LinkedIn: [linkedin.com/in/nischalneupanee](https://www.linkedin.com/in/nischalneupanee/)
 - GitHub: [github.com/nischalneupanee](https://github.com/nischalneupanee)
-- Blog: [nischalneupanee.hashnode.dev](https://nischalneupanee.hashnode.dev)
+- Blog: [www.nischalneupane.name.np/blog](https://www.nischalneupane.name.np/blog)
 
 ---
 
