@@ -8,7 +8,14 @@
     "type": "git",
     "url": "https://github.com/nischalneupanee/nischal-portfolio.git"
   },
-  "keywords": ["portfolio", "ai-ml", "nextjs", "typescript", "tailwindcss", "nischal-neupane"],
+  "keywords": [
+    "portfolio",
+    "ai-ml",
+    "nextjs",
+    "typescript",
+    "tailwindcss",
+    "nischal-neupane"
+  ],
   "private": false,
   "scripts": {
     "dev": "next dev",
@@ -17,11 +24,11 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "framer-motion": "^11.3.19",
-    "graphql": "^16.8.1",
+    "framer-motion": "^12.23.12",
+    "graphql": "^16.11.0",
     "graphql-request": "^6.1.0",
-    "lucide-react": "^0.427.0",
-    "next": "14.2.5",
+    "lucide-react": "^0.542.0",
+    "next": "^14.2.32",
     "particles.js": "^2.0.0",
     "react": "^18",
     "react-dom": "^18",
