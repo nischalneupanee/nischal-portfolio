@@ -1,6 +1,6 @@
-# 🚀 Nischal Neupane Portfolio v1.0.0 - AI/ML Themed Website
+# Nischal Neupane Portfolio v1.0.0 
 
-A futuristic, AI/ML & Data Science inspired portfolio website built with Next.js, TailwindCSS, and modern web technologies.
+Personal Portfolio website for showcasing my projects, skills and blogs.
 
 ![Portfolio Preview](./public/Website%20Profile.png)
 
@@ -179,6 +179,6 @@ portfolio/
 
 ---
 
-**Built with ❤️ using Next.js, TailwindCSS & TypeScript**
+**Built using Next.js, TailwindCSS & TypeScript**
 
 *"The future belongs to those who learn more skills and combine them in creative ways."* - Nischal Neupane
