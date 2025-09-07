@@ -1,52 +1,26 @@
-import { Calendar, Clock, ExternalLink, BookOpen } from 'lucide-react';
+import { Calendar, Clock, ExternalLink, BookOpen, Users, TrendingUp } from 'lucide-react';
+import { getBlogPosts, getPublicationStats, type BlogPost } from '@/lib/hashnode';
+import Image from 'next/image';
 
-// Mock blog posts for demo - replace with actual Hashnode API call
-const mockPosts = [
-  {
-    id: '1',
-    title: 'Getting Started with Machine Learning: A Beginner\'s Journey',
-    brief: 'Exploring the fundamentals of machine learning and my first steps into this fascinating field of AI.',
-    publishedAt: '2024-08-15',
-    readTimeInMinutes: 5,
-    url: 'https://nischalneupanee.hashnode.dev/getting-started-with-ml',
-    coverImage: { url: '/project1.jpeg' },
-    tags: [
-      { name: 'Machine Learning', slug: 'machine-learning' },
-      { name: 'AI', slug: 'ai' },
-      { name: 'Beginner', slug: 'beginner' }
-    ]
-  },
-  {
-    id: '2',
-    title: 'Data Visualization with Python: Creating Meaningful Insights',
-    brief: 'Learn how to create compelling data visualizations using Python libraries like Matplotlib and Seaborn.',
-    publishedAt: '2024-08-10',
-    readTimeInMinutes: 8,
-    url: 'https://nischalneupanee.hashnode.dev/data-visualization-python',
-    coverImage: { url: '/project2.jpeg' },
-    tags: [
-      { name: 'Python', slug: 'python' },
-      { name: 'Data Science', slug: 'data-science' },
-      { name: 'Visualization', slug: 'visualization' }
-    ]
-  },
-  {
-    id: '3',
-    title: 'My Experience at Google DevFest 2024',
-    brief: 'Sharing insights and learnings from attending Google DevFest 2024 and networking with fellow developers.',
-    publishedAt: '2024-07-25',
-    readTimeInMinutes: 6,
-    url: 'https://nischalneupanee.hashnode.dev/google-devfest-2024',
-    coverImage: { url: '/project3.jpeg' },
-    tags: [
-      { name: 'Conference', slug: 'conference' },
-      { name: 'Google', slug: 'google' },
-      { name: 'Networking', slug: 'networking' }
-    ]
+// Blog page component with server-side data fetching
+export default async function Blog() {
+  let posts: BlogPost[] = [];
+  let stats = null;
+  let error = null;
+
+  try {
+    // Fetch blog posts and stats in parallel
+    const [postsData, statsData] = await Promise.all([
+      getBlogPosts(6),
+      getPublicationStats()
+    ]);
+    
+    posts = postsData.publication.posts.edges.map(edge => edge.node);
+    stats = statsData;
+  } catch (err) {
+    console.error('Failed to fetch blog data:', err);
+    error = 'Failed to load blog posts. Please try again later.';
   }
-];
-
-export default function Blog() {
   return (
     <div className="min-h-screen py-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
@@ -77,7 +51,7 @@ export default function Blog() {
           <div className="grid md:grid-cols-3 gap-6">
             <div className="glass rounded-lg p-6 text-center">
               <div className="text-2xl font-bold text-terminal-green mb-2">
-                {mockPosts.length}+
+                {error ? '0' : stats?.posts.totalDocuments || posts.length}+
               </div>
               <p className="text-text-secondary">Articles Published</p>
             </div>
@@ -89,30 +63,63 @@ export default function Blog() {
             </div>
             <div className="glass rounded-lg p-6 text-center">
               <div className="text-2xl font-bold text-terminal-purple mb-2">
-                {mockPosts.reduce((acc, post) => acc + post.readTimeInMinutes, 0)}
+                {error ? '0' : posts.reduce((acc: number, post: BlogPost) => acc + post.readTimeInMinutes, 0)}
               </div>
               <p className="text-text-secondary">Minutes of Content</p>
             </div>
           </div>
         </section>
 
+        {/* Error State */}
+        {error && (
+          <section className="mb-16">
+            <div className="glass rounded-lg p-8 text-center">
+              <div className="text-terminal-orange mb-4">⚠️</div>
+              <h3 className="text-xl font-semibold text-terminal-orange mb-2">Unable to Load Blog Posts</h3>
+              <p className="text-text-secondary mb-4">{error}</p>
+              <p className="text-sm text-text-muted">
+                You can visit my blog directly at{' '}
+                <a
+                  href="https://nischalneupane.hashnode.dev"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-terminal-blue hover:text-terminal-blue/80 underline"
+                >
+                  nischalneupane.hashnode.dev
+                </a>
+              </p>
+            </div>
+          </section>
+        )}
+
         {/* Featured Posts */}
-        <section className="mb-16">
-          <h2 className="text-3xl font-bold text-terminal-blue mb-12 text-center terminal-glow">
-            Latest Articles
-          </h2>
-          <div className="space-y-8">
-            {mockPosts.map((post, index) => (
+        {!error && posts.length > 0 && (
+          <section className="mb-16">
+            <h2 className="text-3xl font-bold text-terminal-blue mb-12 text-center terminal-glow">
+              Latest Articles
+            </h2>
+            <div className="space-y-8">
+              {posts.map((post: BlogPost, index: number) => (
               <article key={post.id} className="glass rounded-lg overflow-hidden hover-glow group">
                 <div className="md:flex">
                   {/* Cover Image */}
                   <div className="md:w-1/3">
                     <div className="h-48 md:h-full relative overflow-hidden">
-                      <img
-                        src={post.coverImage?.url || '/project1.jpeg'}
-                        alt={post.title}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                      />
+                      {post.coverImage?.url ? (
+                        <Image
+                          src={post.coverImage.url}
+                          alt={post.title}
+                          fill
+                          className="object-cover group-hover:scale-110 transition-transform duration-300"
+                        />
+                      ) : (
+                        <Image
+                          src="/project1.jpeg"
+                          alt={post.title}
+                          fill
+                          className="object-cover group-hover:scale-110 transition-transform duration-300"
+                        />
+                      )}
                     </div>
                   </div>
 
@@ -139,7 +146,7 @@ export default function Blog() {
 
                     {/* Tags */}
                     <div className="flex flex-wrap gap-2 mb-4">
-                      {post.tags.map((tag, tagIndex) => (
+                      {post.tags.map((tag: any, tagIndex: number) => (
                         <span
                           key={tagIndex}
                           className="px-2 py-1 bg-terminal-green/20 text-terminal-green rounded text-xs font-medium"
@@ -165,6 +172,26 @@ export default function Blog() {
             ))}
           </div>
         </section>
+        )}
+
+        {/* Empty State */}
+        {!error && posts.length === 0 && (
+          <section className="mb-16">
+            <div className="glass rounded-lg p-8 text-center">
+              <div className="text-terminal-blue mb-4">📝</div>
+              <h3 className="text-xl font-semibold text-terminal-blue mb-2">No Blog Posts Found</h3>
+              <p className="text-text-secondary mb-4">I haven't published any articles yet, but stay tuned!</p>
+              <a
+                href="https://nischalneupane.hashnode.dev"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-terminal-blue hover:text-terminal-blue/80 underline"
+              >
+                Visit my blog to see when new content is available
+              </a>
+            </div>
+          </section>
+        )}
 
         {/* Blog Topics */}
         <section className="mb-16">
