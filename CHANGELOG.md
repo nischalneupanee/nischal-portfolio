@@ -5,6 +5,26 @@ All notable changes to Nischal Neupane Portfolio will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.1] - 2025-09-07
+
+### 🔧 Dependencies & Security Updates
+
+#### Updated
+- **Next.js**: `14.2.5` → `14.2.32` (Critical security patches)
+- **Framer Motion**: `11.3.19` → `12.23.12` (Latest features & performance improvements)
+- **GraphQL**: `16.8.1` → `16.11.0` (Latest stable release)
+- **Lucide React**: `0.427.0` → `0.542.0` (New icons & optimizations)
+
+#### Fixed
+- Fixed all critical security vulnerabilities in Next.js
+- Added `metadataBase` for proper SEO and social media sharing
+- Removed problematic `vercel.json` regions configuration for Hobby plan compatibility
+
+#### Security
+- ✅ Zero security vulnerabilities
+- 🛡️ All dependencies updated to secure versions
+- 🔒 Enhanced metadata configuration
+
 ## [1.0.0] - 2025-09-07
 
 ### 🎉 Initial Release

@@ -1,4 +1,4 @@
-# Nischal Neupane Portfolio v1.0.0 
+# Nischal Neupane Portfolio v1.0.1 
 
 Personal Portfolio website for showcasing my projects, skills and blogs.
 
@@ -6,7 +6,7 @@ Personal Portfolio website for showcasing my projects, skills and blogs.
 
 ## 📋 Version Information
 
-- **Version**: 1.0.0
+- **Version**: 1.0.1
 - **Release Date**: September 7, 2025
 - **Status**: Production Ready ✅
 - **Live Demo**: [nischalneupane.name.np](https://www.nischalneupane.name.np)
