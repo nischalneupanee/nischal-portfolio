@@ -268,90 +268,71 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           </section>
         )}
 
-        {/* Call to Action */}
-        <section className="text-center bg-gradient-to-r from-terminal-blue/10 to-terminal-green/10 border border-terminal-blue/20 rounded-xl p-8">
-          <h3 className="text-2xl font-bold text-text-primary mb-4">
-            Enjoyed this article?
-          </h3>
-          <p className="text-text-secondary mb-6 max-w-2xl mx-auto">
-            Follow me on Hashnode for more articles about AI, Machine Learning, and Software Development.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a
-              href={post.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-terminal-green text-bg-dark font-semibold rounded-lg hover:bg-terminal-green/80 transition-colors"
-            >
-              <ExternalLink size={18} />
-              Follow on Hashnode
-            </a>
-            <Link
-              href="/blog"
-              className="px-6 py-3 border-2 border-terminal-blue text-terminal-blue font-semibold rounded-lg hover:bg-terminal-blue hover:text-bg-dark transition-colors"
-            >
-              Read More Articles
-            </Link>
-          </div>
-        </section>
 
-        {/* Footer */}
-        <footer className="mt-12 pt-8 border-t border-terminal-green/20">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            {/* Author Info */}
-            <div className="flex items-center space-x-3">
-              {post.author.profilePicture && (
-                <Image
-                  src={post.author.profilePicture}
-                  alt={post.author.name}
-                  width={48}
-                  height={48}
-                  className="rounded-full"
-                />
-              )}
-              <div>
-                <p className="font-medium text-text-primary">{post.author.name}</p>
-                <p className="text-sm text-text-muted">@{post.author.username}</p>
+
+        {/* Enhanced Author & CTA Section */}
+        <section className="mt-16">
+          <div className="bg-gradient-to-r from-terminal-blue/5 to-terminal-green/5 border border-terminal-green/20 rounded-xl p-8">
+            {/* Author Information */}
+            <div className="flex flex-col md:flex-row items-center md:items-start gap-6 mb-8">
+              <div className="flex-shrink-0">
+                {post.author.profilePicture && (
+                  <Image
+                    src={post.author.profilePicture}
+                    alt={post.author.name}
+                    width={80}
+                    height={80}
+                    className="rounded-full border-2 border-terminal-green/30"
+                  />
+                )}
+              </div>
+              <div className="text-center md:text-left flex-grow">
+                <h3 className="text-xl font-bold text-text-primary mb-2">
+                  Written by {post.author.name}
+                </h3>
+                <p className="text-terminal-blue mb-3">@{post.author.username}</p>
+                {post.author.bio && (
+                  <p className="text-text-secondary leading-relaxed">
+                    {typeof post.author.bio === 'string' ? post.author.bio : post.author.bio.text}
+                  </p>
+                )}
               </div>
             </div>
 
-            {/* External Link */}
-            <a
-              href={post.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center space-x-2 px-4 py-2 bg-terminal-blue text-bg-dark font-medium rounded-lg hover:bg-terminal-blue/80 transition-colors"
-            >
-              <span>View on Hashnode</span>
-              <ExternalLink className="w-4 h-4" />
-            </a>
-          </div>
-        </footer>
-
-        {/* Call to Action */}
-        <section className="mt-16">
-          <div className="bg-bg-light rounded-lg p-8 text-center border border-terminal-green/20">
-            <h3 className="text-2xl font-bold text-terminal-green mb-4">
-              Enjoyed this article?
-            </h3>
-            <p className="text-text-secondary mb-6">
-              Follow me on Hashnode for more articles on AI/ML, Data Science, and tech insights.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a
-                href="https://nischalneupane.hashnode.dev"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-6 py-3 bg-terminal-green text-bg-dark font-semibold rounded-lg hover:bg-terminal-green/80 transition-colors"
-              >
-                Follow on Hashnode
-              </a>
-              <Link
-                href="/blog"
-                className="px-6 py-3 border-2 border-terminal-blue text-terminal-blue font-semibold rounded-lg hover:bg-terminal-blue hover:text-bg-dark transition-colors"
-              >
-                Read More Articles
-              </Link>
+            {/* Call to Action */}
+            <div className="text-center border-t border-terminal-green/20 pt-8">
+              <h4 className="text-2xl font-bold text-terminal-green mb-4 terminal-glow">
+                Enjoyed this article?
+              </h4>
+              <p className="text-text-secondary mb-6 max-w-2xl mx-auto">
+                Follow {post.author.name} on Hashnode for more articles on AI/ML, Data Science, and tech insights. 
+                Join a community of developers sharing knowledge and growing together.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <a
+                  href={post.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-terminal-green text-bg-dark font-semibold rounded-lg hover:bg-terminal-green/80 transition-all duration-300 hover:scale-105"
+                >
+                  <ExternalLink size={18} />
+                  View on Hashnode
+                </a>
+                <a
+                  href="https://nischalneupane.hashnode.dev"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-6 py-3 border-2 border-terminal-blue text-terminal-blue font-semibold rounded-lg hover:bg-terminal-blue hover:text-bg-dark transition-all duration-300 hover:scale-105"
+                >
+                  Follow Blog
+                </a>
+                <Link
+                  href="/blog"
+                  className="px-6 py-3 bg-terminal-purple/20 text-terminal-purple font-semibold rounded-lg hover:bg-terminal-purple/30 transition-all duration-300 hover:scale-105"
+                >
+                  Read More Articles
+                </Link>
+              </div>
             </div>
           </div>
         </section>

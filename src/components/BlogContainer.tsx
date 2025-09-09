@@ -173,7 +173,7 @@ export default function BlogContainer({ initialPosts, availableTags }: BlogConta
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="group bg-bg-light rounded-lg overflow-hidden border border-terminal-green/20 hover:border-terminal-green/40 transition-all duration-300"
+                className="group bg-gradient-to-r from-bg-light to-bg-light hover:from-bg-light hover:to-bg-dark/50 rounded-xl overflow-hidden border border-terminal-green/20 hover:border-terminal-green/40 transition-all duration-300 hover:shadow-lg hover:shadow-terminal-green/10"
               >
                 <div className="md:flex">
                   {/* Cover Image */}
@@ -190,15 +190,21 @@ export default function BlogContainer({ initialPosts, availableTags }: BlogConta
                   
                   {/* Content */}
                   <div className={`p-6 md:p-8 ${post.coverImage ? 'md:w-2/3' : 'w-full'}`}>
-                    <div className="flex items-center space-x-4 text-sm text-text-muted mb-4">
+                    <div className="flex flex-wrap items-center gap-4 text-sm text-text-muted mb-4">
                       <div className="flex items-center space-x-1">
-                        <Calendar className="w-4 h-4" />
+                        <Calendar className="w-4 h-4 text-terminal-blue" />
                         <span>{formatDate(post.publishedAt)}</span>
                       </div>
                       <div className="flex items-center space-x-1">
-                        <Clock className="w-4 h-4" />
+                        <Clock className="w-4 h-4 text-terminal-purple" />
                         <span>{post.readTimeInMinutes} min read</span>
                       </div>
+                      {post.views && (
+                        <div className="flex items-center space-x-1">
+                          <span className="text-terminal-orange">👁️</span>
+                          <span>{post.views.toLocaleString()} views</span>
+                        </div>
+                      )}
                     </div>
                     
                     <h2 className="text-2xl md:text-3xl font-bold text-text-primary mb-4 group-hover:text-terminal-green transition-colors">
@@ -233,15 +239,23 @@ export default function BlogContainer({ initialPosts, availableTags }: BlogConta
                       </div>
                     )}
                     
-                    <a
-                      href={post.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center space-x-2 text-terminal-green hover:text-terminal-green/80 font-medium transition-colors"
-                    >
-                      <span>Read Full Article</span>
-                      <ExternalLink className="w-4 h-4" />
-                    </a>
+                    <div className="flex flex-col sm:flex-row gap-3">
+                      <a
+                        href={`/blog/${post.slug}`}
+                        className="inline-flex items-center space-x-2 px-4 py-2 bg-terminal-green text-bg-dark font-medium rounded-lg hover:bg-terminal-green/80 transition-all duration-300 hover:scale-105"
+                      >
+                        <span>Read Here</span>
+                      </a>
+                      <a
+                        href={post.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center space-x-2 px-4 py-2 border-2 border-terminal-blue text-terminal-blue font-medium rounded-lg hover:bg-terminal-blue hover:text-bg-dark transition-all duration-300 hover:scale-105"
+                      >
+                        <span>View on Hashnode</span>
+                        <ExternalLink className="w-4 h-4" />
+                      </a>
+                    </div>
                   </div>
                 </div>
               </motion.article>
