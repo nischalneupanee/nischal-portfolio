@@ -960,5 +960,94 @@ export async function revalidateAllBlogData() {
   }
 }
 
+// Static Pages functionality for navigation
+export interface StaticPage {
+  id: string;
+  title: string;
+  slug: string;
+  content: {
+    html: string;
+    markdown: string;
+  };
+}
+
+const STATIC_PAGES_QUERY = `
+  query StaticPages($host: String!) {
+    publication(host: $host) {
+      id
+      staticPages(first: 10) {
+        edges {
+          node {
+            id
+            title
+            slug
+            content {
+              html
+              markdown
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const getStaticPages = unstable_cache(
+  async (): Promise<StaticPage[]> => {
+    try {
+      const data: any = await client.request(STATIC_PAGES_QUERY, {
+        host: publication,
+      });
+
+      if (!data.publication?.staticPages) {
+        return [];
+      }
+
+      return data.publication.staticPages.edges.map((edge: any) => edge.node);
+    } catch (error) {
+      console.error('Error fetching static pages:', error);
+      return [];
+    }
+  },
+  ['static-pages'],
+  {
+    revalidate: CACHE_REVALIDATE_TIME,
+    tags: ['static-pages'],
+  }
+);
+
+// Blog Navigation Items
+export interface BlogNavItem {
+  title: string;
+  href: string;
+  external?: boolean;
+}
+
+export const getBlogNavigation = async (): Promise<BlogNavItem[]> => {
+  const staticPages = await getStaticPages();
+  
+  const navigation: BlogNavItem[] = [
+    { title: 'Home', href: '/blog' },
+    { title: 'All Posts', href: '/blog' },
+  ];
+
+  // Add static pages to navigation
+  staticPages.forEach(page => {
+    navigation.push({
+      title: page.title,
+      href: `/blog/page/${page.slug}`,
+    });
+  });
+
+  // Add common blog sections
+  navigation.push(
+    { title: 'About Author', href: '/about' },
+    { title: 'Full Blog', href: 'https://nischalneupane.hashnode.dev', external: true },
+    { title: 'RSS Feed', href: '/rss.xml', external: true }
+  );
+
+  return navigation;
+};
+
 // Export additional utility functions for better integration
 export { client as hashnodeClient, publication as publicationHost };

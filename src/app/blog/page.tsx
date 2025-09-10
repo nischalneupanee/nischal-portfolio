@@ -1,10 +1,21 @@
-import { Calendar, Clock, ExternalLink, BookOpen, Users, TrendingUp } from 'lucide-react';
-import { getBlogPosts, getPublicationStats, getAllTags, getFeaturedPosts, getPopularPosts, type BlogPost } from '@/lib/hashnode';
+import { Calendar, Clock, ExternalLink, BookOpen, Users, TrendingUp, ArrowRight } from 'lucide-react';
+import { getBlogPosts, getPublicationStats, getAllTags, getFeaturedPosts, getPopularPosts, getBlogNavigation, type BlogPost } from '@/lib/hashnode';
 import Image from 'next/image';
+import Link from 'next/link';
 import BlogContainer from '@/components/BlogContainer';
+import BlogNavigation from '@/components/BlogNavigation';
 
 // Enable ISR for the blog page
 export const revalidate = 1800; // 30 minutes
+
+// Helper function to format dates
+const formatDate = (dateString: string) => {
+  return new Date(dateString).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+};
 
 // Blog page component with server-side data fetching
 export default async function Blog() {
@@ -13,16 +24,18 @@ export default async function Blog() {
   let popularPosts: BlogPost[] = [];
   let stats = null;
   let availableTags: string[] = [];
+  let navigation: any[] = [];
   let error = null;
 
   try {
     // Fetch blog data in parallel for better performance
-    const [postsData, statsData, tagsData, featuredData, popularData] = await Promise.all([
+    const [postsData, statsData, tagsData, featuredData, popularData, navData] = await Promise.all([
       getBlogPosts(6),
       getPublicationStats(),
       getAllTags(),
       getFeaturedPosts(3),
-      getPopularPosts(3)
+      getPopularPosts(3),
+      getBlogNavigation()
     ]);
     
     posts = postsData.publication.posts.edges.map(edge => edge.node);
@@ -30,34 +43,42 @@ export default async function Blog() {
     availableTags = tagsData.map(tag => tag.name);
     featuredPosts = featuredData;
     popularPosts = popularData;
+    navigation = navData;
   } catch (err) {
     console.error('Failed to fetch blog data:', err);
     error = 'Failed to load blog posts. Please try again later.';
   }
   return (
-    <div className="min-h-screen py-20 px-4 sm:px-6 lg:px-8">
+    <>
+      {/* Blog Navigation */}
+      <BlogNavigation navigation={navigation} />
+      
+      <div className="min-h-screen py-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6">
-            <span className="text-terminal-green terminal-glow">$ cat /blog/</span>
+              {/* Hero Section with Terminal-style Header */}
+      <div className="mb-16 text-center bg-gradient-to-r from-terminal-purple/10 via-terminal-blue/10 to-terminal-green/10 rounded-2xl p-12 border border-terminal-blue/20">
+        <div className="max-w-4xl mx-auto">
+          <h1 className="text-5xl font-bold text-text-primary mb-6 font-mono">
+            <span className="text-terminal-green">{'>'}</span>
+            <span className="animate-pulse">_</span> 
+            <span className="text-terminal-blue">Blog</span>
           </h1>
-          <p className="text-xl text-text-secondary max-w-2xl mx-auto mb-8">
-            Thoughts, tutorials, and insights on AI/ML, Data Science, and my journey as a CSIT student.
+          <p className="text-xl text-text-secondary mb-8 leading-relaxed">
+            Exploring technology, development insights, and digital innovation through my coding journey
           </p>
-          <div className="flex justify-center">
-            <a
-              href="https://nischalneupanee.hashnode.dev"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center space-x-2 px-6 py-3 bg-terminal-blue text-bg-dark font-semibold rounded-lg hover:bg-terminal-blue/80 transition-colors"
-            >
-              <BookOpen className="w-5 h-5" />
-              <span>Visit Full Blog</span>
-              <ExternalLink className="w-4 h-4" />
-            </a>
+          <div className="flex items-center justify-center gap-6 text-sm text-text-secondary">
+            <span className="flex items-center gap-2">
+              <span className="w-2 h-2 bg-terminal-green rounded-full animate-pulse"></span>
+              Latest Articles
+            </span>
+            <span className="flex items-center gap-2">
+              <span className="w-2 h-2 bg-terminal-blue rounded-full"></span>
+              {posts.length} Posts Available
+            </span>
           </div>
         </div>
+      </div>
 
         {/* Enhanced Blog Stats */}
         <section className="mb-16">
@@ -117,7 +138,103 @@ export default async function Blog() {
 
         {/* Blog Posts with Search and Filter */}
         {!error && (
-          <BlogContainer initialPosts={posts} availableTags={availableTags} />
+          <>
+            {/* Featured Posts Section */}
+            {featuredPosts && featuredPosts.length > 0 && (
+              <section className="mb-20">
+                <div className="flex items-center gap-3 mb-10">
+                  <div className="flex items-center gap-2">
+                    <span className="text-2xl">⭐</span>
+                    <h2 className="text-3xl font-bold text-text-primary font-mono">Featured Articles</h2>
+                  </div>
+                  <div className="h-px bg-gradient-to-r from-terminal-blue to-transparent flex-1"></div>
+                </div>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                  {featuredPosts.map((post, index) => (
+                    <Link
+                      key={post.id}
+                      href={`/blog/${post.slug}`}
+                      className="group relative bg-gradient-to-br from-bg-dark/60 to-bg-light/60 backdrop-blur-sm border border-terminal-blue/30 rounded-2xl overflow-hidden hover:border-terminal-blue/50 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl hover:shadow-terminal-blue/10"
+                    >
+                      {/* Highlight badge for first featured post */}
+                      {index === 0 && (
+                        <div className="absolute top-4 left-4 z-10 bg-terminal-blue text-bg-dark px-3 py-1 rounded-full text-xs font-semibold">
+                          Latest Featured
+                        </div>
+                      )}
+                      
+                      {post.coverImage ? (
+                        <div className="aspect-video overflow-hidden">
+                          <Image
+                            src={post.coverImage.url}
+                            alt={post.title}
+                            width={600}
+                            height={337}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                          />
+                        </div>
+                      ) : (
+                        <div className="aspect-video bg-gradient-to-br from-terminal-purple/30 to-terminal-blue/30 flex items-center justify-center">
+                          <div className="text-center">
+                            <div className="text-4xl mb-2">💎</div>
+                            <div className="text-terminal-blue font-mono text-sm font-semibold">
+                              {post.tags?.[0]?.name || 'Featured'}
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                      
+                      <div className="p-8">
+                        <div className="flex flex-wrap gap-2 mb-4">
+                          {post.tags?.slice(0, 3).map((tag) => (
+                            <span
+                              key={tag.id}
+                              className="px-3 py-1 bg-terminal-blue/20 text-terminal-blue rounded-full text-xs font-medium"
+                            >
+                              {tag.name}
+                            </span>
+                          ))}
+                        </div>
+                        
+                        <h3 className="text-2xl font-bold text-text-primary group-hover:text-terminal-blue transition-colors mb-4 line-clamp-2">
+                          {post.title}
+                        </h3>
+                        
+                        <p className="text-text-secondary line-clamp-3 mb-6 leading-relaxed">
+                          {post.brief}
+                        </p>
+                        
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-4 text-sm text-text-secondary">
+                            <span className="flex items-center gap-2">
+                              <Calendar size={14} />
+                              {formatDate(post.publishedAt)}
+                            </span>
+                            <span className="flex items-center gap-2">
+                              <Clock size={14} />
+                              {post.readTimeInMinutes} min
+                            </span>
+                          </div>
+                          <ArrowRight 
+                            size={16} 
+                            className="text-terminal-blue group-hover:translate-x-1 transition-transform duration-300" 
+                          />
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {/* All Posts Section */}
+            <section>
+              <h2 className="text-3xl font-bold text-terminal-green mb-8 text-center terminal-glow">
+                All Posts
+              </h2>
+              <BlogContainer initialPosts={posts} availableTags={availableTags} />
+            </section>
+          </>
         )}
 
         {/* Dynamic Blog Topics */}
@@ -198,7 +315,8 @@ export default async function Blog() {
             </blockquote>
           </div>
         </section>
+        </div>
       </div>
-    </div>
+    </>
   );
 }

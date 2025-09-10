@@ -176,20 +176,29 @@ export default function BlogContainer({ initialPosts, availableTags }: BlogConta
                 className="group bg-gradient-to-r from-bg-light to-bg-light hover:from-bg-light hover:to-bg-dark/50 rounded-xl overflow-hidden border border-terminal-green/20 hover:border-terminal-green/40 transition-all duration-300 hover:shadow-lg hover:shadow-terminal-green/10"
               >
                 <div className="md:flex">
-                  {/* Cover Image */}
-                  {post.coverImage && (
-                    <div className="md:w-1/3 relative h-48 md:h-auto">
+                  {/* Cover Image - Always show, with fallback */}
+                  <div className="md:w-1/3 relative h-48 md:h-auto">
+                    {post.coverImage ? (
                       <Image
                         src={post.coverImage.url}
                         alt={post.title}
                         fill
                         className="object-cover"
                       />
-                    </div>
-                  )}
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-terminal-green/20 to-terminal-blue/20 flex items-center justify-center">
+                        <div className="text-center">
+                          <div className="text-4xl mb-2">📝</div>
+                          <div className="text-terminal-green font-mono text-sm">
+                            {post.tags?.[0]?.name || 'Blog Post'}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
                   
                   {/* Content */}
-                  <div className={`p-6 md:p-8 ${post.coverImage ? 'md:w-2/3' : 'w-full'}`}>
+                  <div className="p-6 md:p-8 md:w-2/3">
                     <div className="flex flex-wrap items-center gap-4 text-sm text-text-muted mb-4">
                       <div className="flex items-center space-x-1">
                         <Calendar className="w-4 h-4 text-terminal-blue" />
