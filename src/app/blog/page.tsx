@@ -59,12 +59,13 @@ export default async function Blog() {
               {/* Hero Section with Terminal-style Header */}
       <div className="mb-16 text-center bg-gradient-to-r from-terminal-purple/10 via-terminal-blue/10 to-terminal-green/10 rounded-2xl p-12 border border-terminal-blue/20">
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-5xl font-bold text-text-primary mb-6 font-mono">
+          <h1 className="text-5xl md:text-6xl font-bold text-text-primary mb-6 font-mono">
             <span className="text-terminal-green">{'>'}</span>
             <span className="animate-pulse">_</span> 
             <span className="text-terminal-blue">Blog</span>
+            <span className="text-terminal-purple">.dev</span>
           </h1>
-          <p className="text-xl text-text-secondary mb-8 leading-relaxed">
+          <p className="text-xl md:text-2xl text-text-secondary mb-8 leading-relaxed max-w-3xl mx-auto">
             Exploring technology, development insights, and digital innovation through my coding journey
           </p>
           <div className="flex items-center justify-center gap-6 text-sm text-text-secondary">
@@ -300,31 +301,33 @@ export default async function Blog() {
 
         {/* Enhanced Follow Section */}
         <section className="mb-16">
-          <div className="bg-gradient-to-r from-terminal-green/5 to-terminal-blue/5 border border-terminal-green/20 rounded-xl p-8 text-center">
-            <h2 className="text-2xl font-bold text-terminal-green mb-4 terminal-glow">
-              Join My Journey
+          <div className="bg-gradient-to-r from-terminal-green/10 via-terminal-blue/10 to-terminal-purple/10 border border-terminal-green/30 rounded-xl p-8 text-center backdrop-blur-sm">
+            <div className="text-4xl mb-4">🚀</div>
+            <h2 className="text-2xl md:text-3xl font-bold text-terminal-green mb-4 terminal-glow">
+              Join My Developer Journey
             </h2>
-            <p className="text-text-secondary mb-6 max-w-2xl mx-auto">
+            <p className="text-text-secondary mb-6 max-w-2xl mx-auto text-lg leading-relaxed">
               Follow my blog on Hashnode to get notified about new articles on AI/ML, Data Science, 
-              and my journey as a CSIT student. Join a community of developers sharing knowledge and growing together!
+              Web Development, and my journey as a CSIT student. Join a community of developers sharing knowledge and growing together!
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a
                 href="https://nischalneupanee.hashnode.dev"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-terminal-green text-bg-dark font-semibold rounded-lg hover:bg-terminal-green/80 transition-all duration-300 hover:scale-105"
+                className="group inline-flex items-center gap-2 px-8 py-4 bg-terminal-green text-bg-dark font-semibold rounded-lg hover:bg-terminal-green/80 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-terminal-green/25"
               >
-                <BookOpen className="w-5 h-5" />
+                <BookOpen className="w-5 h-5 group-hover:rotate-12 transition-transform" />
                 Follow on Hashnode
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </a>
               <a
                 href="https://hashnode.com/@nischalneupanee"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-6 py-3 border-2 border-terminal-blue text-terminal-blue font-semibold rounded-lg hover:bg-terminal-blue hover:text-bg-dark transition-all duration-300 hover:scale-105"
+                className="group inline-flex items-center gap-2 px-8 py-4 border-2 border-terminal-blue text-terminal-blue font-semibold rounded-lg hover:bg-terminal-blue hover:text-bg-dark transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-terminal-blue/25"
               >
-                <Users className="w-5 h-5" />
+                <Users className="w-5 h-5 group-hover:scale-110 transition-transform" />
                 View Profile
               </a>
             </div>
@@ -333,11 +336,20 @@ export default async function Blog() {
 
         {/* Terminal Command */}
         <section className="text-center">
-          <div className="glass rounded-lg p-8 font-mono">
-            <div className="text-terminal-green mb-4">nischal@blog:~$ echo &quot;writing_motivation&quot;</div>
-            <blockquote className="text-xl text-text-primary font-semibold">
-              &quot;Sharing knowledge is the best way to multiply it. Every article is a step towards collective learning.&quot;
-            </blockquote>
+          <div className="glass rounded-xl p-8 font-mono border border-terminal-green/20">
+            <div className="text-terminal-green mb-4 text-lg">
+              <span className="text-terminal-blue">nischal</span>
+              <span className="text-text-muted">@</span>
+              <span className="text-terminal-purple">blog</span>
+              <span className="text-text-muted">:~$</span>
+              {' '}echo &quot;writing_motivation&quot;
+            </div>
+            <div className="border-l-4 border-terminal-green pl-6">
+              <blockquote className="text-xl md:text-2xl text-text-primary font-semibold italic">
+                &quot;Sharing knowledge is the best way to multiply it. Every article is a step towards collective learning.&quot;
+              </blockquote>
+              <footer className="text-terminal-blue mt-4 text-lg">— Nischal Neupane</footer>
+            </div>
           </div>
         </section>
         </div>

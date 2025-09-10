@@ -125,10 +125,10 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         {/* Back Button */}
         <Link 
           href="/blog"
-          className="inline-flex items-center space-x-2 text-terminal-green hover:text-terminal-green/80 transition-colors mb-8"
+          className="group inline-flex items-center space-x-2 text-terminal-green hover:text-terminal-green/80 transition-all duration-300 mb-8 hover:translate-x-1"
         >
-          <ArrowLeft className="w-4 h-4" />
-          <span>Back to Blog</span>
+          <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+          <span className="font-medium">Back to Blog</span>
         </Link>
 
         {/* Article Header */}
