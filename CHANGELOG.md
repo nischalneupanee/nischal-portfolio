@@ -5,6 +5,37 @@ All notable changes to Nischal Neupane Portfolio will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.3] - 2025-09-10
+
+### 🆕 Added
+- **BlogActionButtons Component**: Floating action buttons for sharing, liking, and engagement
+- **BlogNavigation Component**: Sticky navigation bar with dropdown menus and mobile support
+- **BlogPostEngagement Component**: Comprehensive engagement section with reactions and comments
+- **BlogTableOfContents Component**: Dynamic table of contents with smooth scrolling
+- **ReadingProgress Component**: Visual reading progress indicator (top bar + circular)
+- Enhanced navigation with static pages support from Hashnode
+- Dynamic blog navigation generation
+- Improved fallback handling for posts without cover images
+
+### 🎨 Enhanced
+- **UI/UX Improvements**: Terminal-themed design consistency across all blog components
+- **Responsive Design**: Enhanced mobile experience with collapsible menus
+- **Interactive Elements**: Smooth animations and hover effects throughout
+- **Accessibility**: Improved keyboard navigation and screen reader support
+- **Performance**: Optimized component loading and better caching strategies
+
+### 🔧 Fixed
+- **Build Issues**: Resolved server-side component compatibility with onClick handlers
+- **Client/Server Separation**: Proper separation of client and server components
+- **Static Generation**: Fixed prerendering issues for blog post pages
+- **SEO Optimization**: Enhanced meta tags and Open Graph support for individual posts
+
+### 📚 Documentation
+- Updated README.md with comprehensive v1.0.3 documentation
+- Added detailed component descriptions and usage examples
+- Enhanced project structure documentation
+- Updated CHANGELOG.md with complete version history
+
 ## [1.0.2] - 2025-09-07
 
 ### ✨ Major Feature: Hashnode Headless Blog Integration

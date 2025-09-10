@@ -1,4 +1,32 @@
-# 🚀 Nischal Portfolio v1.0.2
+# 🚀 Nischal Portfolio v### 📝 Enh- **Smart Caching**: Tagged cache invalidation for efficient updates
+
+## 🆕 What's New in v1.0.3
+
+### Enhanced Blog Components
+- **BlogActionButtons**: Floating action buttons for sharing, liking, and engagement
+- **BlogNavigation**: Sticky navigation bar with dropdown menus and mobile support
+- **BlogPostEngagement**: Comprehensive engagement section with reactions and comments
+- **BlogTableOfContents**: Dynamic table of contents with smooth scrolling
+- **ReadingProgress**: Visual reading progress indicator (top bar + circular)
+
+### UI/UX Improvements
+- **Terminal Theme**: Consistent terminal-inspired design across all blog components
+- **Responsive Design**: Enhanced mobile experience with collapsible menus
+- **Interactive Elements**: Smooth animations and hover effects
+- **Accessibility**: Improved keyboard navigation and screen reader support
+- **Performance**: Optimized component loading and better caching strategies
+
+### Technical Enhancements
+- **Server-Side Compatibility**: Fixed build issues with client/server component separation
+- **Enhanced Navigation**: Dynamic navigation generation from Hashnode static pages
+- **Better Fallbacks**: Improved handling of posts without cover images
+- **SEO Optimization**: Enhanced meta tags and Open Graph support for individual posts
+
+## 🛠 Tech Stacked Blog System (NEW in v1.0.3)
+- **Headless CMS**: Seamlessly integrated with Hashnode GraphQL API v2.0
+- **Interactive Components**: Reading progress, table of contents, share buttons
+- **Enhanced UX**: Blog navigation, action buttons, engagement sections
+- **Real-time Updates**: Webhook-driven content synchronization.3
 
 Personal Portfolio website with integrated Hashnode headless blog, showcasing projects, skills, and dynamic content.
 
@@ -6,8 +34,8 @@ Personal Portfolio website with integrated Hashnode headless blog, showcasing pr
 
 ## 📋 Version Information
 
-- **Version**: 1.0.2
-- **Release Date**: September 7, 2025
+- **Version**: 1.0.3
+- **Release Date**: September 10, 2025
 - **Status**: Production Ready ✅
 - **Live Demo**: [nischalneupane.name.np](https://www.nischalneupane.name.np)
 
@@ -209,18 +237,32 @@ portfolio/
 ├── src/
 │   ├── app/               # Next.js App Router pages
 │   │   ├── about/         # About page
-│   │   ├── blog/          # Blog page
+│   │   ├── blog/          # Blog listing and individual posts
+│   │   │   └── [slug]/    # Dynamic blog post pages
 │   │   ├── contact/       # Contact page
 │   │   ├── skills-projects/ # Skills & Projects page
+│   │   ├── api/           # API routes for webhooks and revalidation
 │   │   ├── layout.tsx     # Root layout
 │   │   ├── page.tsx       # Home page
 │   │   └── globals.css    # Global styles
 │   ├── components/        # Reusable components
 │   │   ├── Navbar.tsx     # Navigation component
 │   │   ├── Footer.tsx     # Footer component
-│   │   └── ParticleBackground.tsx # Particle effects
+│   │   ├── ParticleBackground.tsx # Particle effects
+│   │   ├── BlogActionButtons.tsx # Floating blog action buttons
+│   │   ├── BlogNavigation.tsx # Blog navigation with dropdowns
+│   │   ├── BlogPostEngagement.tsx # Post engagement section
+│   │   ├── BlogTableOfContents.tsx # Dynamic TOC
+│   │   ├── ReadingProgress.tsx # Reading progress indicator
+│   │   ├── BlogContainer.tsx # Blog post container
+│   │   ├── BlogSearch.tsx # Blog search functionality
+│   │   └── TagFilter.tsx  # Tag filtering component
+│   ├── hooks/             # Custom React hooks
+│   │   └── useBlogPosts.ts # Blog posts data fetching
 │   └── lib/               # Utility functions
-│       └── hashnode.ts    # Hashnode API integration
+│       ├── hashnode.ts    # Hashnode API integration
+│       ├── rss.ts         # RSS feed generation
+│       └── sitemap.ts     # Sitemap generation
 ├── tailwind.config.ts     # Tailwind configuration
 ├── next.config.mjs        # Next.js configuration
 └── package.json          # Dependencies and scripts

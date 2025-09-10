@@ -237,32 +237,49 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               <div className="flex flex-wrap items-center gap-6">
                 {/* Reaction Buttons */}
                 <div className="flex items-center gap-3">
-                  <button className="group flex items-center gap-2 px-4 py-2 bg-terminal-blue/10 hover:bg-terminal-blue/20 rounded-lg transition-all duration-300 hover:scale-105">
+                  <a
+                    href={post.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group flex items-center gap-2 px-4 py-2 bg-terminal-blue/10 hover:bg-terminal-blue/20 rounded-lg transition-all duration-300 hover:scale-105"
+                  >
                     <span className="text-lg group-hover:scale-110 transition-transform">👍</span>
                     <span className="text-sm text-terminal-blue font-medium">
                       {post.reactionCount > 0 ? post.reactionCount : 'Like'}
                     </span>
-                  </button>
-                  <button className="group flex items-center gap-2 px-4 py-2 bg-terminal-purple/10 hover:bg-terminal-purple/20 rounded-lg transition-all duration-300 hover:scale-105">
+                  </a>
+                  <a
+                    href={post.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group flex items-center gap-2 px-4 py-2 bg-terminal-purple/10 hover:bg-terminal-purple/20 rounded-lg transition-all duration-300 hover:scale-105"
+                  >
                     <span className="text-lg group-hover:scale-110 transition-transform">❤️</span>
                     <span className="text-sm text-terminal-purple font-medium">Love</span>
-                  </button>
-                  <button className="group flex items-center gap-2 px-4 py-2 bg-terminal-green/10 hover:bg-terminal-green/20 rounded-lg transition-all duration-300 hover:scale-105">
+                  </a>
+                  <a
+                    href={post.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group flex items-center gap-2 px-4 py-2 bg-terminal-green/10 hover:bg-terminal-green/20 rounded-lg transition-all duration-300 hover:scale-105"
+                  >
                     <span className="text-lg group-hover:scale-110 transition-transform">🔥</span>
                     <span className="text-sm text-terminal-green font-medium">Fire</span>
-                  </button>
+                  </a>
                 </div>
 
                 {/* Share Buttons */}
                 <div className="flex items-center gap-2">
                   <span className="text-sm text-text-secondary mr-2">Share:</span>
-                  <button 
-                    onClick={() => navigator.share?.({ title: post.title, url: window.location.href }) || navigator.clipboard.writeText(window.location.href)}
+                  <a
+                    href={post.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="p-2 bg-terminal-blue/10 hover:bg-terminal-blue/20 rounded-lg transition-all duration-300 hover:scale-105"
                     title="Share post"
                   >
                     <ExternalLink size={16} className="text-terminal-blue" />
-                  </button>
+                  </a>
                   <a
                     href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(post.title)}&url=${encodeURIComponent(post.url)}`}
                     target="_blank"
