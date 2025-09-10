@@ -176,25 +176,53 @@ export default function BlogContainer({ initialPosts, availableTags }: BlogConta
                 className="group bg-gradient-to-r from-bg-light to-bg-light hover:from-bg-light hover:to-bg-dark/50 rounded-xl overflow-hidden border border-terminal-green/20 hover:border-terminal-green/40 transition-all duration-300 hover:shadow-lg hover:shadow-terminal-green/10"
               >
                 <div className="md:flex">
-                  {/* Cover Image - Always show, with fallback */}
+                  {/* Cover Image - Always show, with smart fallback */}
                   <div className="md:w-1/3 relative h-48 md:h-auto">
                     {post.coverImage ? (
                       <Image
                         src={post.coverImage.url}
                         alt={post.title}
                         fill
-                        className="object-cover"
+                        className="object-cover group-hover:scale-105 transition-transform duration-300"
+                        onError={(e) => {
+                          // Fallback if image fails to load
+                          e.currentTarget.style.display = 'none';
+                        }}
                       />
-                    ) : (
-                      <div className="w-full h-full bg-gradient-to-br from-terminal-green/20 to-terminal-blue/20 flex items-center justify-center">
-                        <div className="text-center">
-                          <div className="text-4xl mb-2">📝</div>
-                          <div className="text-terminal-green font-mono text-sm">
-                            {post.tags?.[0]?.name || 'Blog Post'}
-                          </div>
+                    ) : null}
+                    
+                    {/* Enhanced fallback with dynamic colors and icons */}
+                    <div className={`w-full h-full ${post.coverImage ? 'hidden' : 'flex'} bg-gradient-to-br ${
+                      post.tags?.[0]?.name === 'Data Science' ? 'from-blue-500/20 via-purple-500/20 to-green-500/20' :
+                      post.tags?.[0]?.name === 'Machine Learning' ? 'from-purple-500/20 via-pink-500/20 to-blue-500/20' :
+                      post.tags?.[0]?.name === 'AI' ? 'from-green-500/20 via-blue-500/20 to-purple-500/20' :
+                      'from-terminal-green/20 via-terminal-blue/20 to-terminal-purple/20'
+                    } items-center justify-center relative overflow-hidden`}>
+                      {/* Animated background elements */}
+                      <div className="absolute inset-0 opacity-10">
+                        <div className="absolute top-2 left-2 w-2 h-2 bg-terminal-green rounded-full animate-pulse"></div>
+                        <div className="absolute top-8 right-4 w-1 h-1 bg-terminal-blue rounded-full animate-pulse delay-1000"></div>
+                        <div className="absolute bottom-6 left-6 w-1.5 h-1.5 bg-terminal-purple rounded-full animate-pulse delay-500"></div>
+                        <div className="absolute bottom-2 right-2 w-1 h-1 bg-terminal-orange rounded-full animate-pulse delay-1500"></div>
+                      </div>
+                      
+                      <div className="text-center z-10">
+                        <div className="text-4xl mb-3 animate-bounce">
+                          {post.tags?.[0]?.name === 'Data Science' ? '📊' :
+                           post.tags?.[0]?.name === 'Machine Learning' ? '🤖' :
+                           post.tags?.[0]?.name === 'AI' ? '🧠' :
+                           post.tags?.[0]?.name === 'Web Development' ? '💻' :
+                           post.tags?.[0]?.name === 'Programming' ? '⚡' :
+                           '📝'}
+                        </div>
+                        <div className="text-terminal-green font-mono text-sm font-semibold">
+                          {post.tags?.[0]?.name || 'Tech Article'}
+                        </div>
+                        <div className="text-xs text-text-muted mt-1 font-mono">
+                          {post.readTimeInMinutes} min read
                         </div>
                       </div>
-                    )}
+                    </div>
                   </div>
                   
                   {/* Content */}
@@ -251,18 +279,20 @@ export default function BlogContainer({ initialPosts, availableTags }: BlogConta
                     <div className="flex flex-col sm:flex-row gap-3">
                       <a
                         href={`/blog/${post.slug}`}
-                        className="inline-flex items-center space-x-2 px-4 py-2 bg-terminal-green text-bg-dark font-medium rounded-lg hover:bg-terminal-green/80 transition-all duration-300 hover:scale-105"
+                        className="inline-flex items-center justify-center space-x-2 px-6 py-3 bg-gradient-to-r from-terminal-green to-terminal-green/80 text-bg-dark font-semibold rounded-lg hover:from-terminal-green/90 hover:to-terminal-green/70 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-terminal-green/20"
                       >
-                        <span>Read Here</span>
+                        <span>🚀</span>
+                        <span>Read Article</span>
                       </a>
                       <a
                         href={post.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center space-x-2 px-4 py-2 border-2 border-terminal-blue text-terminal-blue font-medium rounded-lg hover:bg-terminal-blue hover:text-bg-dark transition-all duration-300 hover:scale-105"
+                        className="inline-flex items-center justify-center space-x-2 px-6 py-3 border-2 border-terminal-blue/60 text-terminal-blue font-semibold rounded-lg hover:bg-terminal-blue/10 hover:border-terminal-blue hover:scale-105 transition-all duration-300 group"
                       >
-                        <span>View on Hashnode</span>
-                        <ExternalLink className="w-4 h-4" />
+                        <span>💬</span>
+                        <span>Discuss on Hashnode</span>
+                        <ExternalLink className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                       </a>
                     </div>
                   </div>

@@ -5,6 +5,44 @@ All notable changes to Nischal Neupane Portfolio will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.4] - 2025-09-10
+
+### 🎨 Blog System Overhaul
+- **MAJOR**: Comprehensive blog UI/UX improvements and fixes
+- **Fixed**: Cover image issues - smart fallback system for posts without images
+- **Enhanced**: Dynamic gradients and animations based on post tags
+- **Improved**: Individual blog post layout and content presentation
+- **Removed**: Confusing "Read full blog" buttons - replaced with clear CTAs
+- **Added**: Tag-specific icons, colors, and visual themes
+- **Enhanced**: Article engagement section with better stats display
+- **Improved**: Mobile responsiveness and accessibility
+- **Added**: New utility functions for image handling (`src/lib/imageUtils.ts`)
+
+### 🔧 Technical Improvements
+- Smart cover image fallback system with animated placeholders
+- Enhanced error handling for missing Hashnode images
+- Better content hierarchy and typography
+- Improved button labeling and functionality
+- Enhanced tag-based color schemes and visual elements
+
+### 📱 UI/UX Enhancements
+- Redesigned blog post headers with better visual impact
+- Enhanced article summary presentation
+- Improved meta information display with badges
+- Better social sharing integration
+- Streamlined engagement actions
+
+### 🎯 Content Presentation
+- Eliminated repeating content issues
+- Better distinction between local reading and Hashnode engagement
+- Enhanced related posts display
+- Improved reading time and statistics presentation
+
+### 📚 Documentation
+- Added comprehensive blog improvements documentation (`BLOG_IMPROVEMENTS_V1.0.4.md`)
+- Detailed technical implementation notes
+- Future enhancement roadmap
+
 ## [1.0.3] - 2025-09-10
 
 ### 🆕 Added

@@ -132,10 +132,10 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         </Link>
 
         {/* Article Header */}
-        <header className="mb-8">
+        <header className="mb-12">
           {/* Cover Image */}
-          {post.coverImage && (
-            <div className="relative h-64 md:h-96 mb-8 rounded-lg overflow-hidden">
+          {post.coverImage ? (
+            <div className="relative h-64 md:h-96 mb-8 rounded-xl overflow-hidden shadow-2xl">
               <Image
                 src={post.coverImage.url}
                 alt={post.title}
@@ -143,56 +143,101 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                 className="object-cover"
                 priority
               />
+              <div className="absolute inset-0 bg-gradient-to-t from-bg-dark/20 via-transparent to-transparent"></div>
+            </div>
+          ) : (
+            <div className={`relative h-64 md:h-80 mb-8 rounded-xl overflow-hidden shadow-2xl bg-gradient-to-br ${
+              post.tags?.[0]?.name === 'Data Science' ? 'from-blue-500/20 via-purple-500/20 to-green-500/20' :
+              post.tags?.[0]?.name === 'Machine Learning' ? 'from-purple-500/20 via-pink-500/20 to-blue-500/20' :
+              post.tags?.[0]?.name === 'AI' ? 'from-green-500/20 via-blue-500/20 to-purple-500/20' :
+              'from-terminal-purple/30 via-terminal-blue/30 to-terminal-green/30'
+            } flex items-center justify-center`}>
+              {/* Enhanced animated background */}
+              <div className="absolute inset-0 opacity-30">
+                <div className="absolute top-8 left-8 w-4 h-4 bg-terminal-green rounded-full animate-ping"></div>
+                <div className="absolute top-16 right-12 w-3 h-3 bg-terminal-blue rounded-full animate-pulse delay-700"></div>
+                <div className="absolute bottom-16 left-16 w-3 h-3 bg-terminal-purple rounded-full animate-pulse delay-300"></div>
+                <div className="absolute bottom-8 right-8 w-2 h-2 bg-terminal-orange rounded-full animate-ping delay-1000"></div>
+                <div className="absolute top-1/2 left-1/4 w-2 h-2 bg-terminal-green rounded-full animate-pulse delay-1500"></div>
+                <div className="absolute top-1/3 right-1/3 w-1.5 h-1.5 bg-terminal-blue rounded-full animate-pulse delay-500"></div>
+              </div>
+              
+              <div className="text-center z-10">
+                <div className="text-8xl md:text-9xl mb-6 animate-bounce">
+                  {post.tags?.[0]?.name === 'Data Science' ? '📊' :
+                   post.tags?.[0]?.name === 'Machine Learning' ? '🤖' :
+                   post.tags?.[0]?.name === 'AI' ? '🧠' :
+                   post.tags?.[0]?.name === 'Web Development' ? '💻' :
+                   post.tags?.[0]?.name === 'Programming' ? '⚡' :
+                   '📝'}
+                </div>
+                <div className="text-terminal-blue font-mono text-xl md:text-2xl font-bold mb-3">
+                  {post.tags?.[0]?.name || 'Tech Article'}
+                </div>
+                <div className="text-text-muted font-mono text-sm">
+                  Featured Article • {post.readTimeInMinutes} min read
+                </div>
+              </div>
             </div>
           )}
 
           {/* Title and Subtitle */}
-          <h1 className="text-3xl md:text-5xl font-bold text-text-primary mb-4">
-            {post.title}
-          </h1>
-          
-          {post.subtitle && (
-            <p className="text-xl text-terminal-blue mb-6 font-medium">
-              {post.subtitle}
-            </p>
-          )}
+          <div className="text-center mb-8">
+            <h1 className="text-4xl md:text-6xl font-bold text-text-primary mb-6 leading-tight">
+              {post.title}
+            </h1>
+            
+            {post.subtitle && (
+              <p className="text-xl md:text-2xl text-terminal-blue mb-6 font-medium leading-relaxed">
+                {post.subtitle}
+              </p>
+            )}
+
+            {/* Brief/Excerpt */}
+            {post.brief && (
+              <div className="max-w-4xl mx-auto">
+                <div className="bg-gradient-to-r from-bg-light/50 to-bg-dark/50 backdrop-blur-sm rounded-xl p-6 md:p-8 mb-8 border border-terminal-green/20">
+                  <div className="flex items-center justify-center mb-4">
+                    <div className="h-px bg-gradient-to-r from-transparent via-terminal-green to-transparent flex-1"></div>
+                    <span className="px-4 text-terminal-green font-mono text-sm">Article Summary</span>
+                    <div className="h-px bg-gradient-to-r from-transparent via-terminal-green to-transparent flex-1"></div>
+                  </div>
+                  <p className="text-text-secondary text-lg md:text-xl leading-relaxed text-center">
+                    {post.brief}
+                  </p>
+                </div>
+              </div>
+            )}
+          </div>
 
           {/* Meta Information */}
-          <div className="flex flex-wrap items-center gap-6 text-text-muted mb-6">
-            <div className="flex items-center space-x-2">
-              <Calendar className="w-4 h-4" />
+          <div className="flex flex-wrap items-center justify-center gap-6 text-text-muted mb-8">
+            <div className="flex items-center space-x-2 bg-bg-light/50 rounded-full px-4 py-2">
+              <Calendar className="w-4 h-4 text-terminal-green" />
               <span>{formatDate(post.publishedAt)}</span>
             </div>
-            <div className="flex items-center space-x-2">
-              <Clock className="w-4 h-4" />
+            <div className="flex items-center space-x-2 bg-bg-light/50 rounded-full px-4 py-2">
+              <Clock className="w-4 h-4 text-terminal-blue" />
               <span>{post.readTimeInMinutes} min read</span>
             </div>
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-2 bg-bg-light/50 rounded-full px-4 py-2">
+              <span className="text-terminal-purple">👤</span>
               <span>By {post.author.name}</span>
             </div>
           </div>
 
           {/* Tags */}
           {post.tags && post.tags.length > 0 && (
-            <div className="flex flex-wrap gap-2 mb-8">
+            <div className="flex flex-wrap justify-center gap-3 mb-8">
               {post.tags.map((tag) => (
                 <span
                   key={tag.id}
-                  className="inline-flex items-center px-3 py-1 bg-terminal-purple/20 text-terminal-purple text-sm rounded-full"
+                  className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-terminal-purple/20 to-terminal-blue/20 text-terminal-purple text-sm rounded-full border border-terminal-purple/30 hover:border-terminal-purple/50 transition-colors"
                 >
-                  <Tag className="w-3 h-3 mr-1" />
+                  <Tag className="w-3 h-3 mr-2" />
                   {tag.name}
                 </span>
               ))}
-            </div>
-          )}
-
-          {/* Brief/Excerpt */}
-          {post.brief && (
-            <div className="bg-bg-light rounded-lg p-6 mb-8 border border-terminal-green/20">
-              <p className="text-text-secondary text-lg leading-relaxed">
-                {post.brief}
-              </p>
             </div>
           )}
         </header>
@@ -396,10 +441,29 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                       />
                     </div>
                   ) : (
-                    <div className="aspect-video mb-4 overflow-hidden rounded-lg bg-gradient-to-br from-terminal-purple/20 to-terminal-blue/20 flex items-center justify-center">
-                      <div className="text-center">
-                        <div className="text-2xl mb-1">📖</div>
-                        <div className="text-terminal-blue font-mono text-xs">
+                    <div className={`aspect-video mb-4 overflow-hidden rounded-lg bg-gradient-to-br ${
+                      relatedPost.tags?.[0]?.name === 'Data Science' ? 'from-blue-500/20 via-purple-500/20 to-green-500/20' :
+                      relatedPost.tags?.[0]?.name === 'Machine Learning' ? 'from-purple-500/20 via-pink-500/20 to-blue-500/20' :
+                      relatedPost.tags?.[0]?.name === 'AI' ? 'from-green-500/20 via-blue-500/20 to-purple-500/20' :
+                      'from-terminal-purple/20 to-terminal-blue/20'
+                    } flex items-center justify-center relative overflow-hidden`}>
+                      {/* Animated elements */}
+                      <div className="absolute inset-0 opacity-30">
+                        <div className="absolute top-2 left-2 w-2 h-2 bg-terminal-green rounded-full animate-pulse"></div>
+                        <div className="absolute top-4 right-3 w-1 h-1 bg-terminal-blue rounded-full animate-pulse delay-500"></div>
+                        <div className="absolute bottom-3 left-4 w-1.5 h-1.5 bg-terminal-purple rounded-full animate-pulse delay-1000"></div>
+                        <div className="absolute bottom-2 right-2 w-1 h-1 bg-terminal-orange rounded-full animate-pulse delay-700"></div>
+                      </div>
+                      
+                      <div className="text-center z-10">
+                        <div className="text-3xl mb-2 animate-bounce">
+                          {relatedPost.tags?.[0]?.name === 'Data Science' ? '📊' :
+                           relatedPost.tags?.[0]?.name === 'Machine Learning' ? '🤖' :
+                           relatedPost.tags?.[0]?.name === 'AI' ? '🧠' :
+                           relatedPost.tags?.[0]?.name === 'Web Development' ? '💻' :
+                           '📖'}
+                        </div>
+                        <div className="text-terminal-blue font-mono text-xs font-semibold">
                           {relatedPost.tags?.[0]?.name || 'Article'}
                         </div>
                       </div>

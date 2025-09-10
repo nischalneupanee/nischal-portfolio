@@ -171,14 +171,39 @@ export default async function Blog() {
                             width={600}
                             height={337}
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                            onError={(e) => {
+                              e.currentTarget.style.display = 'none';
+                            }}
                           />
                         </div>
                       ) : (
-                        <div className="aspect-video bg-gradient-to-br from-terminal-purple/30 to-terminal-blue/30 flex items-center justify-center">
-                          <div className="text-center">
-                            <div className="text-4xl mb-2">💎</div>
-                            <div className="text-terminal-blue font-mono text-sm font-semibold">
+                        <div className={`aspect-video bg-gradient-to-br ${
+                          post.tags?.[0]?.name === 'Data Science' ? 'from-blue-500/20 via-purple-500/20 to-green-500/20' :
+                          post.tags?.[0]?.name === 'Machine Learning' ? 'from-purple-500/20 via-pink-500/20 to-blue-500/20' :
+                          post.tags?.[0]?.name === 'AI' ? 'from-green-500/20 via-blue-500/20 to-purple-500/20' :
+                          'from-terminal-purple/30 to-terminal-blue/30'
+                        } flex items-center justify-center relative overflow-hidden`}>
+                          {/* Animated elements */}
+                          <div className="absolute inset-0 opacity-20">
+                            <div className="absolute top-4 left-4 w-3 h-3 bg-terminal-green rounded-full animate-ping"></div>
+                            <div className="absolute top-8 right-6 w-2 h-2 bg-terminal-blue rounded-full animate-pulse delay-700"></div>
+                            <div className="absolute bottom-8 left-8 w-2 h-2 bg-terminal-purple rounded-full animate-pulse delay-300"></div>
+                            <div className="absolute bottom-4 right-4 w-1.5 h-1.5 bg-terminal-orange rounded-full animate-ping delay-1000"></div>
+                          </div>
+                          
+                          <div className="text-center z-10">
+                            <div className="text-6xl mb-4 animate-bounce">
+                              {post.tags?.[0]?.name === 'Data Science' ? '📊' :
+                               post.tags?.[0]?.name === 'Machine Learning' ? '🤖' :
+                               post.tags?.[0]?.name === 'AI' ? '🧠' :
+                               post.tags?.[0]?.name === 'Web Development' ? '�' :
+                               '✨'}
+                            </div>
+                            <div className="text-terminal-blue font-mono text-lg font-semibold mb-2">
                               {post.tags?.[0]?.name || 'Featured'}
+                            </div>
+                            <div className="text-xs text-text-muted font-mono">
+                              {post.readTimeInMinutes} min read • {formatDate(post.publishedAt)}
                             </div>
                           </div>
                         </div>
