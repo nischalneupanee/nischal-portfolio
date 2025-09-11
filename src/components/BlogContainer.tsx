@@ -7,6 +7,7 @@ import { getBlogPosts, searchBlogPosts, getBlogPostsByTag, type BlogPost } from 
 import BlogSearch from '@/components/BlogSearch';
 import TagFilter from '@/components/TagFilter';
 import Image from 'next/image';
+import { getBlogCoverImage, getPublicationInfo } from '@/lib/imageUtils';
 
 interface BlogContainerProps {
   initialPosts: BlogPost[];
@@ -176,23 +177,73 @@ export default function BlogContainer({ initialPosts, availableTags }: BlogConta
                 className="group bg-gradient-to-r from-bg-light to-bg-light hover:from-bg-light hover:to-bg-dark/50 rounded-xl overflow-hidden border border-terminal-green/20 hover:border-terminal-green/40 transition-all duration-300 hover:shadow-lg hover:shadow-terminal-green/10"
               >
                 <div className="md:flex">
-                  {/* Cover Image - Always show, with smart fallback */}
+                  {/* Enhanced Cover Image with Multiple Fallbacks */}
                   <div className="md:w-1/3 relative h-48 md:h-auto">
-                    {post.coverImage ? (
+                    {/* Primary: Actual Cover Image */}
+                    {post.coverImage && (
                       <Image
                         src={post.coverImage.url}
                         alt={post.title}
                         fill
                         className="object-cover group-hover:scale-105 transition-transform duration-300"
                         onError={(e) => {
-                          // Fallback if image fails to load
+                          // Hide the image if it fails to load
                           e.currentTarget.style.display = 'none';
+                          const fallback = e.currentTarget.parentElement?.querySelector('.fallback-cover') as HTMLElement;
+                          if (fallback) {
+                            fallback.style.display = 'flex';
+                          }
                         }}
                       />
-                    ) : null}
+                    )}
                     
-                    {/* Enhanced fallback with dynamic colors and icons */}
-                    <div className={`w-full h-full ${post.coverImage ? 'hidden' : 'flex'} bg-gradient-to-br ${
+                    {/* Secondary: OG Meta Image fallback */}
+                    {!post.coverImage && post.ogMetaData?.image && (
+                      <Image
+                        src={post.ogMetaData.image}
+                        alt={post.title}
+                        fill
+                        className="object-cover group-hover:scale-105 transition-transform duration-300"
+                        onError={(e) => {
+                          // Hide the OG image if it fails to load
+                          e.currentTarget.style.display = 'none';
+                          const fallback = e.currentTarget.parentElement?.querySelector('.fallback-cover') as HTMLElement;
+                          if (fallback) {
+                            fallback.style.display = 'flex';
+                          }
+                        }}
+                      />
+                    )}
+                    
+                    {/* Default Blog Publication Cover */}
+                    {!post.coverImage && !post.ogMetaData?.image && (
+                      <div className="w-full h-full bg-gradient-to-br from-terminal-green/20 via-terminal-blue/20 to-terminal-purple/20 flex items-center justify-center relative overflow-hidden">
+                        {/* Blog branding pattern */}
+                        <div className="absolute inset-0 opacity-10">
+                          <div className="absolute top-4 left-4 w-3 h-3 bg-terminal-green rounded-full"></div>
+                          <div className="absolute top-8 right-6 w-2 h-2 bg-terminal-blue rounded-full"></div>
+                          <div className="absolute bottom-8 left-8 w-2.5 h-2.5 bg-terminal-purple rounded-full"></div>
+                          <div className="absolute bottom-4 right-4 w-2 h-2 bg-terminal-orange rounded-full"></div>
+                          <div className="absolute top-1/2 left-1/4 w-1.5 h-1.5 bg-terminal-green rounded-full"></div>
+                          <div className="absolute top-1/3 right-1/3 w-1 h-1 bg-terminal-blue rounded-full"></div>
+                        </div>
+                        
+                        <div className="text-center z-10">
+                          <div className="text-4xl mb-3">
+                            💻
+                          </div>
+                          <div className="text-terminal-green font-mono text-sm font-semibold mb-1">
+                            Nischal's Blog
+                          </div>
+                          <div className="text-xs text-text-muted font-mono">
+                            {post.tags?.[0]?.name || 'Tech Article'}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                    
+                    {/* Ultimate fallback - Only shows if images fail to load */}
+                    <div className={`fallback-cover w-full h-full ${(post.coverImage || post.ogMetaData?.image) ? 'hidden' : 'flex'} bg-gradient-to-br ${
                       post.tags?.[0]?.name === 'Data Science' ? 'from-blue-500/20 via-purple-500/20 to-green-500/20' :
                       post.tags?.[0]?.name === 'Machine Learning' ? 'from-purple-500/20 via-pink-500/20 to-blue-500/20' :
                       post.tags?.[0]?.name === 'AI' ? 'from-green-500/20 via-blue-500/20 to-purple-500/20' :

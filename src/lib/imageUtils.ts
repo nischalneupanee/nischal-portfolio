@@ -9,6 +9,58 @@ export interface ImageFallbackConfig {
   publishedAt?: string;
 }
 
+export interface BlogPost {
+  coverImage?: { url: string };
+  ogMetaData?: { image?: string };
+  title: string;
+  tags?: { name: string }[];
+  readTimeInMinutes: number;
+}
+
+/**
+ * Get the best available cover image for a blog post
+ */
+export function getBlogCoverImage(post: BlogPost) {
+  // Priority order:
+  // 1. Actual cover image
+  // 2. OG meta data image
+  // 3. Generated default based on content
+
+  if (post.coverImage?.url) {
+    return {
+      type: 'cover' as const,
+      url: post.coverImage.url,
+      alt: post.title
+    };
+  }
+
+  if (post.ogMetaData?.image) {
+    return {
+      type: 'og' as const,
+      url: post.ogMetaData.image,
+      alt: post.title
+    };
+  }
+
+  return {
+    type: 'default' as const,
+    url: null,
+    alt: post.title
+  };
+}
+
+/**
+ * Get publication information for default covers
+ */
+export function getPublicationInfo() {
+  return {
+    name: "Nischal's Blog",
+    logo: "💻",
+    domain: "nischalneupane.hashnode.dev",
+    defaultTagline: "Tech insights and learning journey"
+  };
+}
+
 /**
  * Generate a gradient class based on blog post tag
  */
