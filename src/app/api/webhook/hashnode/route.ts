@@ -26,23 +26,60 @@ interface HashnodeWebhookEvent {
 
 // Verify webhook signature for security
 function verifySignature(payload: string, signature: string): boolean {
+  // In development or if no secret is configured, allow the webhook
   if (!process.env.HASHNODE_WEBHOOK_SECRET) {
     console.warn('HASHNODE_WEBHOOK_SECRET not configured, skipping signature verification');
-    return true; // Allow in development without secret
+    return true;
+  }
+
+  // If running in development mode, allow bypass
+  if (process.env.NODE_ENV === 'development') {
+    console.log('Development mode: allowing webhook without signature verification');
+    return true;
+  }
+
+  if (!signature) {
+    console.error('No signature provided in webhook');
+    return false;
   }
 
   try {
+    // Remove 'sha256=' prefix if present
+    const cleanSignature = signature.replace(/^sha256=/, '');
+    
+    // Validate hex format
+    if (!/^[a-f0-9]+$/i.test(cleanSignature)) {
+      console.error('Invalid signature format, not hex:', cleanSignature);
+      return false;
+    }
+    
     const expectedSignature = crypto
       .createHmac('sha256', process.env.HASHNODE_WEBHOOK_SECRET)
-      .update(payload)
+      .update(payload, 'utf8')
       .digest('hex');
     
-    return crypto.timingSafeEqual(
-      Buffer.from(`sha256=${expectedSignature}`),
-      Buffer.from(signature)
+    // Ensure both signatures are the same length before comparison
+    if (cleanSignature.length !== expectedSignature.length) {
+      console.error('Signature length mismatch:', {
+        received: cleanSignature.length,
+        expected: expectedSignature.length,
+        receivedSig: cleanSignature.substring(0, 20) + '...',
+        expectedSig: expectedSignature.substring(0, 20) + '...'
+      });
+      return false;
+    }
+    
+    const isValid = crypto.timingSafeEqual(
+      Buffer.from(expectedSignature, 'hex'),
+      Buffer.from(cleanSignature, 'hex')
     );
+    
+    console.log('Signature verification result:', isValid);
+    return isValid;
+    
   } catch (error) {
     console.error('Error verifying webhook signature:', error);
+    // In production, fail securely
     return false;
   }
 }
@@ -53,6 +90,15 @@ export async function POST(request: NextRequest) {
     const signature = headersList.get('x-hashnode-signature') || '';
     const payload = await request.text();
 
+    // Log webhook details for debugging
+    console.log('Webhook received:', {
+      hasSignature: !!signature,
+      signatureLength: signature.length,
+      payloadLength: payload.length,
+      hasSecret: !!process.env.HASHNODE_WEBHOOK_SECRET,
+      timestamp: new Date().toISOString()
+    });
+
     // Verify webhook signature
     if (!verifySignature(payload, signature)) {
       console.error('Invalid webhook signature');
@@ -62,7 +108,18 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const event: HashnodeWebhookEvent = JSON.parse(payload);
+    // Parse the event
+    let event: HashnodeWebhookEvent;
+    try {
+      event = JSON.parse(payload);
+    } catch (parseError) {
+      console.error('Error parsing webhook payload:', parseError);
+      return NextResponse.json(
+        { error: 'Invalid JSON payload' },
+        { status: 400 }
+      );
+    }
+
     console.log('Received Hashnode webhook:', event.eventType, event.data);
 
     // Handle different event types
@@ -184,6 +241,8 @@ export async function GET() {
   return NextResponse.json({
     status: 'healthy',
     timestamp: new Date().toISOString(),
-    service: 'hashnode-webhook'
+    service: 'hashnode-webhook',
+    environment: process.env.NODE_ENV || 'unknown',
+    hasSecret: !!process.env.HASHNODE_WEBHOOK_SECRET
   });
 }
