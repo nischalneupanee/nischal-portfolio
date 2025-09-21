@@ -1,13 +1,7 @@
 import { notFound } from 'next/navigation';
-import { Calendar, Clock, ExternalLink, Tag, ArrowLeft } from 'lucide-react';
-import { getBlogPostBySlug, getBlogPosts, getRelatedPosts, getBlogNavigation } from '@/lib/hashnode';
-import Image from 'next/image';
+import { getBlogPostBySlug, getBlogPosts, getRelatedPosts } from '@/lib/hashnode';
 import Link from 'next/link';
-import BlogNavigation from '@/components/BlogNavigation';
-import BlogTableOfContents from '@/components/BlogTableOfContents';
-import ReadingProgress from '@/components/ReadingProgress';
-import BlogActionButtons from '@/components/BlogActionButtons';
-import BlogPostEngagement from '@/components/BlogPostEngagement';
+import { Calendar, Clock, Eye, Heart, MessageCircle, Share2, BookOpen } from 'lucide-react';
 
 // Enable ISR for this page
 export const revalidate = 3600; // Revalidate every hour
@@ -20,10 +14,10 @@ interface BlogPostPageProps {
   };
 }
 
-// Generate static params for better performance with larger dataset
+// Generate static params for better performance
 export async function generateStaticParams() {
   try {
-    const response = await getBlogPosts(50); // Get posts for static generation (max 50)
+    const response = await getBlogPosts(50);
     
     if (!response?.publication?.posts?.edges) {
       return [];
@@ -80,13 +74,11 @@ export async function generateMetadata({ params }: BlogPostPageProps) {
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
   let post;
   let relatedPosts;
-  let navigation;
   
   try {
-    [post, relatedPosts, navigation] = await Promise.all([
+    [post, relatedPosts] = await Promise.all([
       getBlogPostBySlug(params.slug),
-      getRelatedPosts(params.slug, 4),
-      getBlogNavigation()
+      getRelatedPosts(params.slug, 6),
     ]);
   } catch (error) {
     console.error('Error fetching blog data:', error);
@@ -106,528 +98,240 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   };
 
   return (
-    <>
-      {/* Reading Progress Indicator */}
-      <ReadingProgress />
-      
-      {/* Blog Action Buttons */}
-      <BlogActionButtons 
-        postUrl={post.url}
-        postTitle={post.title}
-        hashnodeUrl={post.url}
-      />
-      
-      {/* Blog Navigation */}
-      <BlogNavigation />
-      
-      <div className="min-h-screen py-20 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto">
-        {/* Back Button */}
-        <Link 
-          href="/blog"
-          className="group inline-flex items-center space-x-2 text-terminal-green hover:text-terminal-green/80 transition-all duration-300 mb-8 hover:translate-x-1"
-        >
-          <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-          <span className="font-medium">Back to Blog</span>
-        </Link>
-
-        {/* Article Header */}
-        <header className="mb-12">
-          {/* Cover Image */}
-          {post.coverImage ? (
-            <div className="relative h-64 md:h-96 mb-8 rounded-xl overflow-hidden shadow-2xl">
-              <Image
-                src={post.coverImage.url}
-                alt={post.title}
-                fill
-                className="object-cover"
-                priority
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-bg-dark/20 via-transparent to-transparent"></div>
+    <div className="min-h-screen bg-black text-green-500">
+      {/* Navigation Bar */}
+      <nav className="border-b border-gray-800 bg-black/90 backdrop-blur-sm sticky top-0 z-50">
+        <div className="max-w-6xl mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <Link 
+              href="/blog"
+              className="flex items-center gap-2 text-gray-400 hover:text-green-400 transition-colors"
+            >
+              ← Back to Blog
+            </Link>
+            <div className="flex items-center gap-4">
+              <button className="p-2 text-gray-400 hover:text-green-400 transition-colors">
+                <Share2 className="w-5 h-5" />
+              </button>
+              <a
+                href={post.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-4 py-2 bg-green-600 text-black rounded-lg hover:bg-green-500 transition-colors font-medium"
+              >
+                View on Hashnode
+              </a>
             </div>
-          ) : (
-            <div className={`relative h-64 md:h-80 mb-8 rounded-xl overflow-hidden shadow-2xl bg-gradient-to-br ${
-              post.tags?.[0]?.name === 'Data Science' ? 'from-blue-500/20 via-purple-500/20 to-green-500/20' :
-              post.tags?.[0]?.name === 'Machine Learning' ? 'from-purple-500/20 via-pink-500/20 to-blue-500/20' :
-              post.tags?.[0]?.name === 'AI' ? 'from-green-500/20 via-blue-500/20 to-purple-500/20' :
-              'from-terminal-purple/30 via-terminal-blue/30 to-terminal-green/30'
-            } flex items-center justify-center`}>
-              {/* Enhanced animated background */}
-              <div className="absolute inset-0 opacity-30">
-                <div className="absolute top-8 left-8 w-4 h-4 bg-terminal-green rounded-full animate-ping"></div>
-                <div className="absolute top-16 right-12 w-3 h-3 bg-terminal-blue rounded-full animate-pulse delay-700"></div>
-                <div className="absolute bottom-16 left-16 w-3 h-3 bg-terminal-purple rounded-full animate-pulse delay-300"></div>
-                <div className="absolute bottom-8 right-8 w-2 h-2 bg-terminal-orange rounded-full animate-ping delay-1000"></div>
-                <div className="absolute top-1/2 left-1/4 w-2 h-2 bg-terminal-green rounded-full animate-pulse delay-1500"></div>
-                <div className="absolute top-1/3 right-1/3 w-1.5 h-1.5 bg-terminal-blue rounded-full animate-pulse delay-500"></div>
-              </div>
-              
-              <div className="text-center z-10">
-                <div className="text-8xl md:text-9xl mb-6 animate-bounce">
-                  {post.tags?.[0]?.name === 'Data Science' ? '📊' :
-                   post.tags?.[0]?.name === 'Machine Learning' ? '🤖' :
-                   post.tags?.[0]?.name === 'AI' ? '🧠' :
-                   post.tags?.[0]?.name === 'Web Development' ? '💻' :
-                   post.tags?.[0]?.name === 'Programming' ? '⚡' :
-                   '📝'}
-                </div>
-                <div className="text-terminal-blue font-mono text-xl md:text-2xl font-bold mb-3">
-                  {post.tags?.[0]?.name || 'Tech Article'}
-                </div>
-                <div className="text-text-muted font-mono text-sm">
-                  Featured Article • {post.readTimeInMinutes} min read
-                </div>
+          </div>
+        </div>
+      </nav>
+
+      <div className="max-w-4xl mx-auto px-4 py-8">
+        {/* Post Header */}
+        <header className="mb-8">
+          {/* Series Banner */}
+          {post.series && (
+            <div className="mb-6 p-4 bg-gray-900 border border-gray-700 rounded-lg">
+              <div className="flex items-center gap-3 text-sm">
+                <BookOpen className="w-5 h-5 text-green-400" />
+                <span className="text-gray-400">Part of series:</span>
+                <Link
+                  href={`/blog/series/${post.series.slug}`}
+                  className="text-green-400 hover:text-green-300 transition-colors font-medium"
+                >
+                  {post.series.name}
+                </Link>
+                <span className="text-gray-500">
+                  ({post.series.posts?.totalDocuments || 0} posts)
+                </span>
               </div>
             </div>
           )}
 
-          {/* Title and Subtitle */}
-          <div className="text-center mb-8">
-            <h1 className="text-4xl md:text-6xl font-bold text-text-primary mb-6 leading-tight">
-              {post.title}
-            </h1>
-            
-            {post.subtitle && (
-              <p className="text-xl md:text-2xl text-terminal-blue mb-6 font-medium leading-relaxed">
-                {post.subtitle}
-              </p>
-            )}
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-tight">
+            {post.title}
+          </h1>
+          
+          {post.subtitle && (
+            <p className="text-xl text-gray-400 mb-6">
+              {post.subtitle}
+            </p>
+          )}
 
-            {/* Brief/Excerpt */}
-            {post.brief && (
-              <div className="max-w-4xl mx-auto">
-                <div className="bg-gradient-to-r from-bg-light/50 to-bg-dark/50 backdrop-blur-sm rounded-xl p-6 md:p-8 mb-8 border border-terminal-green/20">
-                  <div className="flex items-center justify-center mb-4">
-                    <div className="h-px bg-gradient-to-r from-transparent via-terminal-green to-transparent flex-1"></div>
-                    <span className="px-4 text-terminal-green font-mono text-sm">Article Summary</span>
-                    <div className="h-px bg-gradient-to-r from-transparent via-terminal-green to-transparent flex-1"></div>
-                  </div>
-                  <p className="text-text-secondary text-lg md:text-xl leading-relaxed text-center">
-                    {post.brief}
-                  </p>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Meta Information */}
-          <div className="flex flex-wrap items-center justify-center gap-6 text-text-muted mb-8">
-            <div className="flex items-center space-x-2 bg-bg-light/50 rounded-full px-4 py-2">
-              <Calendar className="w-4 h-4 text-terminal-green" />
+          {/* Post Meta */}
+          <div className="flex flex-wrap items-center gap-6 text-sm text-gray-500 mb-6">
+            <div className="flex items-center gap-2">
+              <img
+                src={post.author.profilePicture || '/default-avatar.png'}
+                alt={post.author.name}
+                className="w-8 h-8 rounded-full"
+              />
+              <span className="text-green-400">{post.author.name}</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <Calendar className="w-4 h-4" />
               <span>{formatDate(post.publishedAt)}</span>
             </div>
-            <div className="flex items-center space-x-2 bg-bg-light/50 rounded-full px-4 py-2">
-              <Clock className="w-4 h-4 text-terminal-blue" />
+            <div className="flex items-center gap-1">
+              <Clock className="w-4 h-4" />
               <span>{post.readTimeInMinutes} min read</span>
             </div>
-            <div className="flex items-center space-x-2 bg-bg-light/50 rounded-full px-4 py-2">
-              <span className="text-terminal-purple">👤</span>
-              <span>By {post.author.name}</span>
+            <div className="flex items-center gap-1">
+              <Eye className="w-4 h-4" />
+              <span>{post.views.toLocaleString()} views</span>
             </div>
           </div>
 
           {/* Tags */}
-          {post.tags && post.tags.length > 0 && (
-            <div className="flex flex-wrap justify-center gap-3 mb-8">
+          {post.tags.length > 0 && (
+            <div className="flex flex-wrap gap-2 mb-8">
               {post.tags.map((tag) => (
                 <span
                   key={tag.id}
-                  className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-terminal-purple/20 to-terminal-blue/20 text-terminal-purple text-sm rounded-full border border-terminal-purple/30 hover:border-terminal-purple/50 transition-colors"
+                  className="px-3 py-1 bg-gray-800 text-green-400 text-sm rounded-full border border-gray-700"
                 >
-                  <Tag className="w-3 h-3 mr-2" />
-                  {tag.name}
+                  #{tag.name}
                 </span>
               ))}
             </div>
           )}
+
+          {/* Cover Image */}
+          {post.coverImage && (
+            <div className="mb-8 rounded-lg overflow-hidden">
+              <img
+                src={post.coverImage.url}
+                alt={post.title}
+                className="w-full h-auto max-h-[500px] object-cover"
+              />
+            </div>
+          )}
+
+          {/* Engagement Actions */}
+          <div className="flex items-center justify-between py-4 border-y border-gray-800 mb-8">
+            <div className="flex items-center gap-6">
+              <button className="flex items-center gap-2 text-gray-400 hover:text-red-400 transition-colors">
+                <Heart className="w-5 h-5" />
+                <span>{post.reactionCount}</span>
+              </button>
+              <button className="flex items-center gap-2 text-gray-400 hover:text-blue-400 transition-colors">
+                <MessageCircle className="w-5 h-5" />
+                <span>{post.responseCount}</span>
+              </button>
+            </div>
+            <button className="flex items-center gap-2 text-gray-400 hover:text-green-400 transition-colors">
+              <Share2 className="w-5 h-5" />
+              <span>Share</span>
+            </button>
+          </div>
         </header>
 
-        {/* Table of Contents */}
-        <BlogTableOfContents content={post.content.html} />
-
-        {/* Article Content */}
-        <article className="mb-16">
+        {/* Post Content */}
+        <article className="prose prose-invert prose-green max-w-none">
           <div 
-            className="prose prose-invert prose-lg max-w-none
-                     prose-headings:text-text-primary prose-headings:font-bold prose-headings:tracking-tight
-                     prose-p:text-text-secondary prose-p:leading-relaxed prose-p:text-lg prose-p:mb-6
-                     prose-a:text-terminal-blue prose-a:no-underline prose-a:font-medium hover:prose-a:underline hover:prose-a:text-terminal-blue/80
-                     prose-code:text-terminal-green prose-code:bg-bg-dark/80 prose-code:px-2 prose-code:py-1 prose-code:rounded prose-code:text-sm prose-code:font-mono prose-code:border prose-code:border-terminal-green/20
-                     prose-pre:bg-bg-dark/90 prose-pre:border prose-pre:border-terminal-blue/20 prose-pre:rounded-lg prose-pre:p-6 prose-pre:overflow-x-auto prose-pre:shadow-lg
-                     prose-blockquote:border-l-4 prose-blockquote:border-terminal-blue prose-blockquote:bg-gradient-to-r prose-blockquote:from-bg-dark/50 prose-blockquote:to-transparent prose-blockquote:pl-6 prose-blockquote:py-4 prose-blockquote:my-6 prose-blockquote:italic
-                     prose-img:rounded-xl prose-img:shadow-lg prose-img:border prose-img:border-terminal-blue/20 prose-img:my-8
-                     prose-ul:text-text-secondary prose-ol:text-text-secondary prose-ul:my-6 prose-ol:my-6
-                     prose-li:my-2 prose-li:leading-relaxed prose-li:marker:text-terminal-blue
-                     prose-strong:text-text-primary prose-strong:font-semibold
-                     prose-em:text-terminal-purple prose-em:font-medium
-                     prose-h1:text-4xl prose-h1:mb-8 prose-h1:mt-12 prose-h1:text-terminal-green
-                     prose-h2:text-3xl prose-h2:mb-6 prose-h2:mt-10 prose-h2:text-terminal-blue prose-h2:border-b prose-h2:border-terminal-blue/20 prose-h2:pb-3
-                     prose-h3:text-2xl prose-h3:mb-4 prose-h3:mt-8 prose-h3:text-terminal-purple
-                     prose-h4:text-xl prose-h4:mb-3 prose-h4:mt-6 prose-h4:text-terminal-orange
-                     prose-h5:text-lg prose-h5:mb-2 prose-h5:mt-4
-                     prose-h6:text-base prose-h6:mb-2 prose-h6:mt-4
-                     prose-table:border prose-table:border-terminal-blue/20 prose-table:rounded-lg prose-table:overflow-hidden
-                     prose-th:bg-terminal-blue/10 prose-th:text-terminal-blue prose-th:font-semibold prose-th:p-3
-                     prose-td:p-3 prose-td:border-t prose-td:border-terminal-blue/10
-                     prose-hr:border-terminal-blue/20 prose-hr:my-8"
+            className="blog-content"
             dangerouslySetInnerHTML={{ __html: post.content.html }}
           />
         </article>
 
-        {/* Post Engagement Section */}
-        <section className="mb-16">
-          <div className="bg-gradient-to-r from-bg-dark/60 to-bg-light/60 backdrop-blur-sm border border-terminal-blue/20 rounded-xl p-8">
-            {/* Reactions and Stats */}
-            <div className="flex flex-wrap items-center justify-between gap-6 mb-8">
-              <div className="flex flex-wrap items-center gap-6">
-                {/* Reaction Buttons */}
-                <div className="flex items-center gap-3">
-                  <a
-                    href={post.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group flex items-center gap-2 px-4 py-2 bg-terminal-blue/10 hover:bg-terminal-blue/20 rounded-lg transition-all duration-300 hover:scale-105"
-                  >
-                    <span className="text-lg group-hover:scale-110 transition-transform">👍</span>
-                    <span className="text-sm text-terminal-blue font-medium">
-                      {post.reactionCount > 0 ? post.reactionCount : 'Like'}
-                    </span>
-                  </a>
-                  <a
-                    href={post.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group flex items-center gap-2 px-4 py-2 bg-terminal-purple/10 hover:bg-terminal-purple/20 rounded-lg transition-all duration-300 hover:scale-105"
-                  >
-                    <span className="text-lg group-hover:scale-110 transition-transform">❤️</span>
-                    <span className="text-sm text-terminal-purple font-medium">Love</span>
-                  </a>
-                  <a
-                    href={post.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group flex items-center gap-2 px-4 py-2 bg-terminal-green/10 hover:bg-terminal-green/20 rounded-lg transition-all duration-300 hover:scale-105"
-                  >
-                    <span className="text-lg group-hover:scale-110 transition-transform">🔥</span>
-                    <span className="text-sm text-terminal-green font-medium">Fire</span>
-                  </a>
-                </div>
-
-                {/* Share Buttons */}
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-text-secondary mr-2">Share:</span>
-                  <a
-                    href={post.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-2 bg-terminal-blue/10 hover:bg-terminal-blue/20 rounded-lg transition-all duration-300 hover:scale-105"
-                    title="Share post"
-                  >
-                    <ExternalLink size={16} className="text-terminal-blue" />
-                  </a>
-                  <a
-                    href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(post.title)}&url=${encodeURIComponent(post.url)}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-2 bg-terminal-blue/10 hover:bg-terminal-blue/20 rounded-lg transition-all duration-300 hover:scale-105"
-                    title="Share on Twitter"
-                  >
-                    <span className="text-terminal-blue">🐦</span>
-                  </a>
-                  <a
-                    href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(post.url)}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-2 bg-terminal-blue/10 hover:bg-terminal-blue/20 rounded-lg transition-all duration-300 hover:scale-105"
-                    title="Share on LinkedIn"
-                  >
-                    <span className="text-terminal-blue">💼</span>
-                  </a>
-                </div>
-              </div>
-
-              {/* Post Stats */}
-              <div className="flex flex-wrap items-center gap-6 text-sm text-text-secondary">
-                {post.views && (
-                  <span className="flex items-center gap-2">
-                    <span className="text-terminal-green">�️</span>
-                    {post.views.toLocaleString()} views
-                  </span>
-                )}
-                {post.responseCount > 0 && (
-                  <span className="flex items-center gap-2">
-                    <span className="text-terminal-purple">💬</span>
-                    {post.responseCount} responses
-                  </span>
-                )}
-                {post.updatedAt && post.updatedAt !== post.publishedAt && (
-                  <span className="flex items-center gap-2">
-                    <span className="text-terminal-orange">✏️</span>
-                    Updated {formatDate(post.updatedAt)}
-                  </span>
-                )}
-              </div>
-            </div>
-
-            {/* Comments Section */}
-            <div className="border-t border-terminal-blue/20 pt-8">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-xl font-bold text-text-primary">
-                  Discussion ({post.responseCount || 0})
+        {/* Post Footer */}
+        <footer className="mt-12 pt-8 border-t border-gray-800">
+          {/* Author Bio */}
+          <div className="bg-gray-900 border border-gray-700 rounded-lg p-6 mb-8">
+            <div className="flex items-start gap-4">
+              <img
+                src={post.author.profilePicture || '/default-avatar.png'}
+                alt={post.author.name}
+                className="w-16 h-16 rounded-full"
+              />
+              <div>
+                <h3 className="text-xl font-bold text-green-400 mb-2">
+                  {post.author.name}
                 </h3>
-                <a
-                  href={`${post.url}#comments`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-terminal-green/20 text-terminal-green rounded-lg hover:bg-terminal-green/30 transition-all duration-300"
-                >
-                  <span>💬</span>
-                  Join Discussion on Hashnode
-                </a>
-              </div>
-              
-              <div className="bg-bg-dark/50 rounded-lg p-6 text-center">
-                <div className="text-3xl mb-4">💭</div>
-                <h4 className="text-lg font-semibold text-text-primary mb-3">
-                  Join the conversation on Hashnode
-                </h4>
-                <p className="text-text-secondary mb-6 max-w-2xl mx-auto">
-                  Comments and discussions happen on Hashnode where you can engage with other developers, 
-                  ask questions, and share your thoughts about this article.
-                </p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <a
-                    href={`${post.url}#comments`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-6 py-3 bg-terminal-blue text-bg-dark font-semibold rounded-lg hover:bg-terminal-blue/80 transition-all duration-300 hover:scale-105"
-                  >
-                    <span>💬</span>
-                    View Comments
-                  </a>
-                  <a
-                    href={post.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="px-6 py-3 border-2 border-terminal-green text-terminal-green font-semibold rounded-lg hover:bg-terminal-green hover:text-bg-dark transition-all duration-300 hover:scale-105"
-                  >
-                    Read on Hashnode
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Related Posts */}
-        {relatedPosts && relatedPosts.length > 0 && (
-          <section className="mb-16">
-            <h2 className="text-2xl font-bold text-text-primary mb-8">Related Articles</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {relatedPosts.map((relatedPost) => (
-                <Link
-                  key={relatedPost.id}
-                  href={`/blog/${relatedPost.slug}`}
-                  className="group bg-gradient-to-br from-bg-dark/50 to-bg-light/50 backdrop-blur-sm border border-terminal-blue/20 rounded-xl p-6 hover:border-terminal-blue/40 transition-all duration-300 hover:scale-105"
-                >
-                  {relatedPost.coverImage ? (
-                    <div className="aspect-video mb-4 overflow-hidden rounded-lg">
-                      <Image
-                        src={relatedPost.coverImage.url}
-                        alt={relatedPost.title}
-                        width={400}
-                        height={225}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      />
-                    </div>
-                  ) : (
-                    <div className={`aspect-video mb-4 overflow-hidden rounded-lg bg-gradient-to-br ${
-                      relatedPost.tags?.[0]?.name === 'Data Science' ? 'from-blue-500/20 via-purple-500/20 to-green-500/20' :
-                      relatedPost.tags?.[0]?.name === 'Machine Learning' ? 'from-purple-500/20 via-pink-500/20 to-blue-500/20' :
-                      relatedPost.tags?.[0]?.name === 'AI' ? 'from-green-500/20 via-blue-500/20 to-purple-500/20' :
-                      'from-terminal-purple/20 to-terminal-blue/20'
-                    } flex items-center justify-center relative overflow-hidden`}>
-                      {/* Animated elements */}
-                      <div className="absolute inset-0 opacity-30">
-                        <div className="absolute top-2 left-2 w-2 h-2 bg-terminal-green rounded-full animate-pulse"></div>
-                        <div className="absolute top-4 right-3 w-1 h-1 bg-terminal-blue rounded-full animate-pulse delay-500"></div>
-                        <div className="absolute bottom-3 left-4 w-1.5 h-1.5 bg-terminal-purple rounded-full animate-pulse delay-1000"></div>
-                        <div className="absolute bottom-2 right-2 w-1 h-1 bg-terminal-orange rounded-full animate-pulse delay-700"></div>
-                      </div>
-                      
-                      <div className="text-center z-10">
-                        <div className="text-3xl mb-2 animate-bounce">
-                          {relatedPost.tags?.[0]?.name === 'Data Science' ? '📊' :
-                           relatedPost.tags?.[0]?.name === 'Machine Learning' ? '🤖' :
-                           relatedPost.tags?.[0]?.name === 'AI' ? '🧠' :
-                           relatedPost.tags?.[0]?.name === 'Web Development' ? '💻' :
-                           '📖'}
-                        </div>
-                        <div className="text-terminal-blue font-mono text-xs font-semibold">
-                          {relatedPost.tags?.[0]?.name || 'Article'}
-                        </div>
-                      </div>
-                    </div>
+                {post.author.bio?.text && (
+                  <p className="text-gray-400 mb-3">
+                    {post.author.bio.text}
+                  </p>
+                )}
+                <div className="flex items-center gap-4">
+                  {post.author.socialMediaLinks?.website && (
+                    <a
+                      href={post.author.socialMediaLinks.website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-green-400 hover:text-green-300 transition-colors"
+                    >
+                      Website
+                    </a>
                   )}
-                  <h3 className="text-lg font-semibold text-text-primary group-hover:text-terminal-blue transition-colors mb-2">
-                    {relatedPost.title}
-                  </h3>
-                  <p className="text-text-secondary text-sm line-clamp-2 mb-3">
-                    {relatedPost.brief}
-                  </p>
-                  <div className="flex items-center gap-4 text-xs text-text-secondary">
-                    <span className="flex items-center gap-1">
-                      <Calendar size={12} />
-                      {formatDate(relatedPost.publishedAt)}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <Clock size={12} />
-                      {relatedPost.readTimeInMinutes} min read
-                    </span>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </section>
-        )}
-
-
-
-        {/* Enhanced Author Section */}
-        <section className="mb-16">
-          <div className="bg-gradient-to-r from-terminal-blue/5 via-bg-dark/60 to-terminal-green/5 border border-terminal-green/20 rounded-xl p-8">
-            {/* Author Card */}
-            <div className="flex flex-col md:flex-row items-center md:items-start gap-6 mb-8">
-              <div className="flex-shrink-0 relative">
-                {post.author.profilePicture && (
-                  <div className="relative">
-                    <Image
-                      src={post.author.profilePicture}
-                      alt={post.author.name}
-                      width={100}
-                      height={100}
-                      className="rounded-full border-3 border-terminal-green/30 shadow-lg"
-                    />
-                    <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-terminal-green rounded-full border-2 border-bg-dark flex items-center justify-center">
-                      <span className="text-xs">✓</span>
-                    </div>
-                  </div>
-                )}
-              </div>
-              
-              <div className="text-center md:text-left flex-grow">
-                <div className="flex flex-col md:flex-row md:items-center gap-3 mb-4">
-                  <h3 className="text-2xl font-bold text-text-primary">
-                    {post.author.name}
-                  </h3>
-                  <div className="flex flex-wrap items-center gap-3 justify-center md:justify-start">
-                    <span className="px-3 py-1 bg-terminal-blue/20 text-terminal-blue rounded-full text-sm font-medium">
-                      @{post.author.username}
-                    </span>
-                    <span className="px-3 py-1 bg-terminal-green/20 text-terminal-green rounded-full text-sm font-medium">
-                      Author
-                    </span>
-                  </div>
+                  {post.author.socialMediaLinks?.twitter && (
+                    <a
+                      href={post.author.socialMediaLinks.twitter}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-green-400 hover:text-green-300 transition-colors"
+                    >
+                      Twitter
+                    </a>
+                  )}
+                  {post.author.socialMediaLinks?.github && (
+                    <a
+                      href={post.author.socialMediaLinks.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-green-400 hover:text-green-300 transition-colors"
+                    >
+                      GitHub
+                    </a>
+                  )}
                 </div>
-                
-                {post.author.bio && (
-                  <p className="text-text-secondary leading-relaxed mb-4 max-w-2xl">
-                    {typeof post.author.bio === 'string' ? post.author.bio : post.author.bio.text}
-                  </p>
-                )}
-
-                {/* Social Links */}
-                {post.author.socialMediaLinks && (
-                  <div className="flex flex-wrap items-center gap-3 justify-center md:justify-start">
-                    {post.author.socialMediaLinks.website && (
-                      <a
-                        href={post.author.socialMediaLinks.website}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="p-2 bg-terminal-blue/10 hover:bg-terminal-blue/20 rounded-lg transition-all duration-300 hover:scale-105"
-                        title="Website"
-                      >
-                        <span className="text-terminal-blue">🌐</span>
-                      </a>
-                    )}
-                    {post.author.socialMediaLinks.github && (
-                      <a
-                        href={post.author.socialMediaLinks.github}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="p-2 bg-terminal-blue/10 hover:bg-terminal-blue/20 rounded-lg transition-all duration-300 hover:scale-105"
-                        title="GitHub"
-                      >
-                        <span className="text-terminal-blue">🐙</span>
-                      </a>
-                    )}
-                    {post.author.socialMediaLinks.twitter && (
-                      <a
-                        href={post.author.socialMediaLinks.twitter}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="p-2 bg-terminal-blue/10 hover:bg-terminal-blue/20 rounded-lg transition-all duration-300 hover:scale-105"
-                        title="Twitter"
-                      >
-                        <span className="text-terminal-blue">🐦</span>
-                      </a>
-                    )}
-                    {post.author.socialMediaLinks.linkedin && (
-                      <a
-                        href={post.author.socialMediaLinks.linkedin}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="p-2 bg-terminal-blue/10 hover:bg-terminal-blue/20 rounded-lg transition-all duration-300 hover:scale-105"
-                        title="LinkedIn"
-                      >
-                        <span className="text-terminal-blue">💼</span>
-                      </a>
-                    )}
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Call to Action */}
-            <div className="text-center border-t border-terminal-green/20 pt-8">
-              <h4 className="text-2xl font-bold text-terminal-green mb-4 terminal-glow">
-                📚 More from {post.author.name}
-              </h4>
-              <p className="text-text-secondary mb-6 max-w-2xl mx-auto">
-                Discover more articles on AI/ML, Data Science, and cutting-edge technology. 
-                Follow for regular insights and join our growing developer community.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <a
-                  href={`https://nischalneupane.hashnode.dev`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-terminal-green text-bg-dark font-semibold rounded-lg hover:bg-terminal-green/80 transition-all duration-300 hover:scale-105"
-                >
-                  <span>🔔</span>
-                  Follow on Hashnode
-                </a>
-                <a
-                  href={post.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-6 py-3 border-2 border-terminal-blue text-terminal-blue font-semibold rounded-lg hover:bg-terminal-blue hover:text-bg-dark transition-all duration-300 hover:scale-105"
-                >
-                  <ExternalLink size={18} />
-                  View Original
-                </a>
-                <Link
-                  href="/blog"
-                  className="px-6 py-3 bg-terminal-purple/20 text-terminal-purple font-semibold rounded-lg hover:bg-terminal-purple/30 transition-all duration-300 hover:scale-105"
-                >
-                  📖 Browse All Articles
-                </Link>
               </div>
             </div>
           </div>
-        </section>
+
+          {/* Related Posts */}
+          {relatedPosts && relatedPosts.length > 0 && (
+            <div>
+              <h2 className="text-2xl font-bold mb-6">Related Posts</h2>
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {relatedPosts.map((relatedPost) => (
+                  <RelatedPostCard key={relatedPost.id} post={relatedPost} />
+                ))}
+              </div>
+            </div>
+          )}
+        </footer>
+      </div>
+    </div>
+  );
+}
+
+function RelatedPostCard({ post }: { post: any }) {
+  return (
+    <article className="bg-gray-900 border border-gray-700 rounded-lg overflow-hidden hover:border-green-500 transition-colors group">
+      {post.coverImage && (
+        <div className="aspect-video overflow-hidden">
+          <img
+            src={post.coverImage.url}
+            alt={post.title}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+          />
+        </div>
+      )}
+      <div className="p-4">
+        <h3 className="font-bold mb-2 text-sm group-hover:text-green-400 transition-colors line-clamp-2">
+          <Link href={`/blog/${post.slug}`}>
+            {post.title}
+          </Link>
+        </h3>
+        <p className="text-gray-400 text-xs mb-3 line-clamp-2">
+          {post.brief}
+        </p>
+        <div className="flex items-center justify-between text-xs text-gray-500">
+          <time>{new Date(post.publishedAt).toLocaleDateString()}</time>
+          <span>{post.readTimeInMinutes} min</span>
         </div>
       </div>
-    </>
+    </article>
   );
 }

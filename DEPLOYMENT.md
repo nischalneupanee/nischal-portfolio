@@ -1,13 +1,69 @@
-# 🚀 Quick Deployment Guide
+# 🚀 Production Deployment Guide v2.0.0
 
-## Prerequisites
+Comprehensive deployment guide for Nischal Portfolio with complete production setup, monitoring, and troubleshooting.
+
+## 📋 Pre-Deployment Checklist
+
+### ✅ Code Quality
+- [ ] Production build completes without errors: `npm run build`
+- [ ] TypeScript compilation passes: `npm run type-check`
+- [ ] No security vulnerabilities: `npm audit`
+- [ ] All GraphQL queries validated against Hashnode schema
+- [ ] Environment variables properly configured
+- [ ] Performance metrics meet standards (87.2kB shared bundle)
+
+### ✅ Functionality Testing
+- [ ] Blog posts load correctly with series and search functionality
+- [ ] All navigation links work properly
+- [ ] Mobile responsiveness tested across devices
+- [ ] SEO meta tags and OpenGraph properly set
+- [ ] RSS feed and sitemap generation working
+- [ ] Webhook endpoints respond correctly
+
+## 🌐 Deployment Options
+
+### 1. Vercel Deployment (Recommended)
+
+Vercel provides optimal Next.js hosting with automatic deployments and edge optimization.
+
+#### Setup Steps
+
+1. **Install Vercel CLI**
+   ```bash
+   npm i -g vercel
+   ```
+
+2. **Login and Connect**
+   ```bash
+   vercel login
+   vercel link
+   ```
+
+3. **Configure Environment Variables**
+   ```bash
+   # Add via Vercel Dashboard or CLI
+   vercel env add HASHNODE_PUBLICATION_HOST
+   vercel env add NEXT_PUBLIC_HASHNODE_PUBLICATION_HOST
+   # Add other required environment variables
+   ```
+
+4. **Deploy**
+   ```bash
+   # Deploy to preview
+   vercel
+   
+   # Deploy to production
+   vercel --prod
+   ```
+
+### 2. Manual Testing & Setup
+
+#### Prerequisites
 - Hashnode blog set up and published
 - Vercel account (or other Next.js hosting)
 - Environment variables configured
 
-## Deployment Steps
-
-### 1. Quick Setup
+#### Quick Setup
 ```bash
 # Run the setup script
 npm run setup:hashnode
@@ -19,15 +75,17 @@ npm run test:hashnode
 npm run dev
 ```
 
-### 2. Environment Variables
+#### Environment Variables
 Set these in your hosting platform:
 
 **Required:**
-- `NEXT_PUBLIC_HASHNODE_PUBLICATION=your-blog.hashnode.dev`
-- `NEXT_PUBLIC_SITE_URL=https://your-domain.com`
+- `HASHNODE_PUBLICATION_HOST=your-blog.hashnode.dev`
+- `NEXT_PUBLIC_HASHNODE_PUBLICATION_HOST=your-blog.hashnode.dev`
 
-**Recommended:**
-- `HASHNODE_WEBHOOK_SECRET=your-secret-key`
+**Optional:**
+- `HASHNODE_GRAPHQL_ENDPOINT=https://gql.hashnode.com`
+- `REVALIDATE_SECRET=your-webhook-secret-key`
+- `HASHNODE_PAT=your-personal-access-token`
 - `REVALIDATE_SECRET=your-revalidate-key`
 - `HASHNODE_PAT=your-personal-access-token`
 

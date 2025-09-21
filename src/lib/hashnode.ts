@@ -66,6 +66,46 @@ export interface BlogPost {
   preferences?: {
     disableComments: boolean;
   };
+  series?: {
+    id: string;
+    name: string;
+    slug: string;
+    description?: {
+      text: string;
+    };
+    coverImage?: string;
+    posts?: {
+      totalDocuments: number;
+    };
+  };
+}
+
+export interface Series {
+  id: string;
+  name: string;
+  slug: string;
+  description: {
+    text: string;
+  };
+  coverImage: {
+    url: string;
+  };
+  createdAt: string;
+  posts: {
+    edges: Array<{
+      node: BlogPost;
+    }>;
+    pageInfo: {
+      hasNextPage: boolean;
+      endCursor: string | null;
+    };
+    totalDocuments: number;
+  };
+  author: {
+    id: string;
+    name: string;
+    username: string;
+  };
 }
 
 export interface Tag {
@@ -139,6 +179,18 @@ const GET_POSTS_QUERY = `
             preferences {
               disableComments
             }
+            series {
+              id
+              name
+              slug
+              description {
+                text
+              }
+              coverImage
+              posts(first: 10) {
+                totalDocuments
+              }
+            }
             tags {
               id
               name
@@ -166,6 +218,104 @@ const GET_POSTS_QUERY = `
           endCursor
         }
         totalDocuments
+      }
+    }
+  }
+`;
+
+const GET_SERIES_QUERY = `
+  query GetSeries($host: String!, $first: Int) {
+    publication(host: $host) {
+      series(first: $first) {
+        edges {
+          node {
+            id
+            name
+            slug
+            description {
+              text
+            }
+            coverImage {
+              url
+            }
+            createdAt
+            posts(first: 1) {
+              totalDocuments
+            }
+            author {
+              id
+              name
+              username
+            }
+          }
+        }
+        pageInfo {
+          hasNextPage
+          endCursor
+        }
+        totalDocuments
+      }
+    }
+  }
+`;
+
+const GET_SERIES_BY_SLUG_QUERY = `
+  query GetSeriesBySlug($host: String!, $slug: String!, $first: Int) {
+    publication(host: $host) {
+      series(slug: $slug) {
+        id
+        name
+        slug
+        description {
+          text
+        }
+        coverImage {
+          url
+        }
+        createdAt
+        posts(first: $first) {
+          edges {
+            node {
+              id
+              title
+              subtitle
+              brief
+              slug
+              publishedAt
+              updatedAt
+              coverImage {
+                url
+              }
+              url
+              readTimeInMinutes
+              reactionCount
+              responseCount
+              views
+              featured
+              tags {
+                id
+                name
+                slug
+              }
+              author {
+                id
+                name
+                username
+                profilePicture
+              }
+            }
+          }
+          pageInfo {
+            hasNextPage
+            endCursor
+          }
+          totalDocuments
+        }
+        author {
+          id
+          name
+          username
+        }
       }
     }
   }
@@ -613,6 +763,18 @@ export const getBlogPostBySlug = unstable_cache(
             preferences {
               disableComments
             }
+            series {
+              id
+              name
+              slug
+              description {
+                text
+              }
+              coverImage
+              posts(first: 10) {
+                totalDocuments
+              }
+            }
             tags {
               id
               name
@@ -1016,6 +1178,63 @@ export const getStaticPages = unstable_cache(
   }
 );
 
+// Series functions
+export const getAllSeries = unstable_cache(
+  async (first: number = 20, after?: string): Promise<{ series: Series[]; hasNextPage: boolean; endCursor?: string }> => {
+    try {
+      const data: any = await client.request(GET_SERIES_QUERY, {
+        host: publication,
+        first,
+        after,
+      });
+
+      if (!data.publication?.series) {
+        return { series: [], hasNextPage: false };
+      }
+
+      const series = data.publication.series.edges.map((edge: any) => edge.node);
+      const { hasNextPage, endCursor } = data.publication.series.pageInfo;
+
+      return { series, hasNextPage, endCursor };
+    } catch (error) {
+      console.error('Error fetching series:', error);
+      return { series: [], hasNextPage: false };
+    }
+  },
+  ['series'],
+  {
+    revalidate: CACHE_REVALIDATE_TIME,
+    tags: ['series'],
+  }
+);
+
+export const getSeriesBySlug = unstable_cache(
+  async (slug: string, first: number = 20, after?: string): Promise<Series | null> => {
+    try {
+      const data: any = await client.request(GET_SERIES_BY_SLUG_QUERY, {
+        host: publication,
+        slug,
+        first,
+        after,
+      });
+
+      if (!data.publication?.series) {
+        return null;
+      }
+
+      return data.publication.series;
+    } catch (error) {
+      console.error('Error fetching series by slug:', error);
+      return null;
+    }
+  },
+  ['series-by-slug'],
+  {
+    revalidate: CACHE_REVALIDATE_TIME,
+    tags: ['series'],
+  }
+);
+
 // Blog Navigation Items
 export interface BlogNavItem {
   title: string;
@@ -1025,11 +1244,17 @@ export interface BlogNavItem {
 
 export const getBlogNavigation = async (): Promise<BlogNavItem[]> => {
   const staticPages = await getStaticPages();
+  const { series } = await getAllSeries(10); // Get first 10 series for navigation
   
   const navigation: BlogNavItem[] = [
     { title: 'Home', href: '/blog' },
     { title: 'All Posts', href: '/blog' },
   ];
+
+  // Add series navigation if any exist
+  if (series.length > 0) {
+    navigation.push({ title: 'Series', href: '/blog/series' });
+  }
 
   // Add static pages to navigation
   staticPages.forEach(page => {
