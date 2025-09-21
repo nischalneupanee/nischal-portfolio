@@ -118,7 +118,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       />
       
       {/* Blog Navigation */}
-      <BlogNavigation navigation={navigation || []} />
+      <BlogNavigation />
       
       <div className="min-h-screen py-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">

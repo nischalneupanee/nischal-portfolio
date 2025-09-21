@@ -1,5 +1,5 @@
 import { Calendar, Clock, ExternalLink, BookOpen, Users, TrendingUp, ArrowRight } from 'lucide-react';
-import { getBlogPosts, getPublicationStats, getAllTags, getFeaturedPosts, getPopularPosts, getBlogNavigation, type BlogPost } from '@/lib/hashnode';
+import { getBlogPosts, getPublicationStats, getAllTags, getFeaturedPosts, getPopularPosts, type BlogPost } from '@/lib/hashnode';
 import Image from 'next/image';
 import Link from 'next/link';
 import BlogContainer from '@/components/BlogContainer';
@@ -18,42 +18,70 @@ const formatDate = (dateString: string) => {
 };
 
 // Blog page component with server-side data fetching
-export default async function Blog() {
+export default async function Blog({
+  searchParams
+}: {
+  searchParams: { page?: string; tag?: string; search?: string; }
+}) {
+  const currentPage = Number(searchParams.page) || 1;
+  const postsPerPage = 6;
+  const selectedTag = searchParams.tag;
+  const searchQuery = searchParams.search;
+
   let posts: BlogPost[] = [];
   let featuredPosts: BlogPost[] = [];
   let popularPosts: BlogPost[] = [];
   let stats = null;
   let availableTags: string[] = [];
-  let navigation: any[] = [];
+  let totalPosts = 0;
+  let hasNextPage = false;
   let error = null;
 
   try {
     // Fetch blog data in parallel for better performance
-    const [postsData, statsData, tagsData, featuredData, popularData, navData] = await Promise.all([
-      getBlogPosts(6),
+    const [postsData, statsData, tagsData, featuredData, popularData] = await Promise.all([
+      getBlogPosts(postsPerPage * currentPage), // Fetch enough posts for current page
       getPublicationStats(),
       getAllTags(),
       getFeaturedPosts(3),
-      getPopularPosts(3),
-      getBlogNavigation()
+      getPopularPosts(3)
     ]);
     
-    posts = postsData.publication.posts.edges.map(edge => edge.node);
+    posts = postsData.publication.posts.edges.map((edge: any) => edge.node);
     stats = statsData;
-    availableTags = tagsData.map(tag => tag.name);
+    availableTags = tagsData.map((tag: any) => tag.name);
     featuredPosts = featuredData;
     popularPosts = popularData;
-    navigation = navData;
+    totalPosts = stats?.posts?.totalDocuments || posts.length;
+    hasNextPage = postsData.publication.posts.pageInfo.hasNextPage;
+
+    // Apply filters
+    if (selectedTag) {
+      posts = posts.filter(post => 
+        post.tags.some(tag => tag.name.toLowerCase() === selectedTag.toLowerCase())
+      );
+    }
+
+    if (searchQuery) {
+      posts = posts.filter(post =>
+        post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        post.brief.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+
+    // Apply pagination
+    const startIndex = (currentPage - 1) * postsPerPage;
+    const endIndex = startIndex + postsPerPage;
+    posts = posts.slice(startIndex, endIndex);
+
   } catch (err) {
     console.error('Failed to fetch blog data:', err);
     error = 'Failed to load blog posts. Please try again later.';
   }
   return (
     <>
-      {/* Blog Navigation */}
-      <BlogNavigation navigation={navigation} />
-      
-      <div className="min-h-screen py-20 px-4 sm:px-6 lg:px-8">
+        {/* Blog Navigation */}
+        <BlogNavigation />      <div className="min-h-screen py-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
               {/* Hero Section with Terminal-style Header */}
@@ -255,10 +283,66 @@ export default async function Blog() {
 
             {/* All Posts Section */}
             <section>
-              <h2 className="text-3xl font-bold text-terminal-green mb-8 text-center terminal-glow">
-                All Posts
-              </h2>
+              <div className="flex justify-between items-center mb-8">
+                <h2 className="text-3xl font-bold text-terminal-green terminal-glow">
+                  All Posts
+                </h2>
+                <div className="text-text-secondary font-mono text-sm">
+                  {totalPosts > 0 && (
+                    <span>
+                      Showing {((currentPage - 1) * postsPerPage) + 1}-{Math.min(currentPage * postsPerPage, posts.length + ((currentPage - 1) * postsPerPage))} of {totalPosts}
+                    </span>
+                  )}
+                </div>
+              </div>
+              
               <BlogContainer initialPosts={posts} availableTags={availableTags} />
+              
+              {/* Pagination Controls */}
+              {totalPosts > postsPerPage && (
+                <div className="mt-12 flex justify-center items-center gap-4">
+                  <div className="flex items-center gap-2">
+                    {currentPage > 1 && (
+                      <Link
+                        href={`/blog?page=${currentPage - 1}${selectedTag ? `&tag=${selectedTag}` : ''}${searchQuery ? `&search=${searchQuery}` : ''}`}
+                        className="px-4 py-2 bg-terminal-blue/20 text-terminal-blue border border-terminal-blue/30 rounded-lg hover:bg-terminal-blue/30 transition-colors font-mono"
+                      >
+                        Previous
+                      </Link>
+                    )}
+                    
+                    <div className="flex items-center gap-1">
+                      {Array.from({ length: Math.min(5, Math.ceil(totalPosts / postsPerPage)) }, (_, i) => {
+                        const pageNum = i + 1;
+                        const isActive = pageNum === currentPage;
+                        
+                        return (
+                          <Link
+                            key={pageNum}
+                            href={`/blog?page=${pageNum}${selectedTag ? `&tag=${selectedTag}` : ''}${searchQuery ? `&search=${searchQuery}` : ''}`}
+                            className={`px-3 py-2 rounded-lg font-mono transition-colors ${
+                              isActive
+                                ? 'bg-terminal-green text-bg-dark font-bold'
+                                : 'text-terminal-green hover:bg-terminal-green/20'
+                            }`}
+                          >
+                            {pageNum}
+                          </Link>
+                        );
+                      })}
+                    </div>
+                    
+                    {hasNextPage && currentPage < Math.ceil(totalPosts / postsPerPage) && (
+                      <Link
+                        href={`/blog?page=${currentPage + 1}${selectedTag ? `&tag=${selectedTag}` : ''}${searchQuery ? `&search=${searchQuery}` : ''}`}
+                        className="px-4 py-2 bg-terminal-blue/20 text-terminal-blue border border-terminal-blue/30 rounded-lg hover:bg-terminal-blue/30 transition-colors font-mono"
+                      >
+                        Next
+                      </Link>
+                    )}
+                  </div>
+                </div>
+              )}
             </section>
           </>
         )}

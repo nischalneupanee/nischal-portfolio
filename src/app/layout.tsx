@@ -25,6 +25,14 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "Nischal Neupane" }],
   creator: "Nischal Neupane",
+  icons: {
+    icon: [
+      { url: '/navlogo.png', sizes: '32x32', type: 'image/png' },
+      { url: '/navlogo.png', sizes: '16x16', type: 'image/png' }
+    ],
+    apple: { url: '/navlogo.png', sizes: '180x180', type: 'image/png' },
+    shortcut: '/navlogo.png'
+  },
   openGraph: {
     type: "website",
     locale: "en_US",
