@@ -1,6 +1,6 @@
 {
   "name": "nischal-portfolio",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Nischal Neupane's professional portfolio website with integrated Hashnode blog system, featuring advanced search, series support, and modular architecture",
   "author": "Nischal Neupane <nischalneupanee@gmail.com>",
   "homepage": "https://www.nischalneupane.name.np",
@@ -34,6 +34,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
     "setup:hashnode": "./scripts/setup-hashnode.sh",
     "test:hashnode": "npx tsx scripts/test-hashnode.ts",
     "cache:debug": "NEXT_PRIVATE_DEBUG_CACHE=1 npm run dev",
@@ -41,6 +44,7 @@
     "preview": "npm run build && npm run start"
   },
   "dependencies": {
+    "date-fns": "^4.1.0",
     "framer-motion": "^12.23.12",
     "graphql": "^16.11.0",
     "graphql-request": "^6.1.0",
@@ -53,11 +57,17 @@
     "terminal.css": "^0.7.4"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.8.0",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/jest": "^30.0.0",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "eslint": "^8",
     "eslint-config-next": "14.2.5",
+    "jest": "^30.1.3",
+    "jest-environment-jsdom": "^30.1.2",
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
     "tsx": "^4.20.5",

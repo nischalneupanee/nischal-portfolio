@@ -1,47 +1,27 @@
+import { Suspense } from 'react';
+import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { getBlogPostBySlug, getBlogPosts, getRelatedPosts } from '@/lib/hashnode';
 import Link from 'next/link';
-import { Calendar, Clock, Eye, Heart, MessageCircle, Share2, BookOpen } from 'lucide-react';
-
-// Enable ISR for this page
-export const revalidate = 3600; // Revalidate every hour
-export const dynamic = 'force-static';
-export const dynamicParams = true;
+import { ArrowLeft, ExternalLink, Calendar, Clock, User, Heart, Eye } from 'lucide-react';
+import { getPostBySlug } from '@/lib/hashnode';
+import { 
+  LoadingSpinner, 
+  ReadingProgress, 
+  SocialShare, 
+  TableOfContents 
+} from '@/components/blog';
+import { format } from 'date-fns';
 
 interface BlogPostPageProps {
-  params: {
-    slug: string;
-  };
+  params: { slug: string };
 }
 
-// Generate static params for better performance
-export async function generateStaticParams() {
+export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
   try {
-    const response = await getBlogPosts(50);
-    
-    if (!response?.publication?.posts?.edges) {
-      return [];
-    }
-
-    return response.publication.posts.edges.map((edge: any) => ({
-      slug: edge.node.slug,
-    }));
-  } catch (error) {
-    console.error('Error generating static params:', error);
-    return [];
-  }
-}
-
-// Generate metadata for each post
-export async function generateMetadata({ params }: BlogPostPageProps) {
-  try {
-    const post = await getBlogPostBySlug(params.slug);
+    const post = await getPostBySlug(params.slug);
     
     if (!post) {
-      return {
-        title: 'Post Not Found',
-        description: 'The requested blog post could not be found.',
-      };
+      return { title: 'Post Not Found' };
     }
 
     return {
@@ -50,288 +30,284 @@ export async function generateMetadata({ params }: BlogPostPageProps) {
       openGraph: {
         title: post.title,
         description: post.brief,
-        images: post.coverImage?.url ? [post.coverImage.url] : [],
         type: 'article',
         publishedTime: post.publishedAt,
         authors: [post.author.name],
+        images: post.coverImage ? [{ url: post.coverImage.url }] : [],
+        url: `/blog/${params.slug}`,
       },
       twitter: {
         card: 'summary_large_image',
         title: post.title,
         description: post.brief,
-        images: post.coverImage?.url ? [post.coverImage.url] : [],
+        images: post.coverImage ? [post.coverImage.url] : [],
       },
     };
   } catch (error) {
-    console.error('Error generating metadata:', error);
-    return {
-      title: 'Blog Post | Nischal Neupane',
-      description: 'Read the latest blog post from Nischal Neupane.',
-    };
+    return { title: 'Post Not Found' };
   }
 }
 
-export default async function BlogPostPage({ params }: BlogPostPageProps) {
-  let post;
-  let relatedPosts;
-  
+async function BlogPostContent({ slug }: { slug: string }) {
   try {
-    [post, relatedPosts] = await Promise.all([
-      getBlogPostBySlug(params.slug),
-      getRelatedPosts(params.slug, 6),
-    ]);
-  } catch (error) {
-    console.error('Error fetching blog data:', error);
-    notFound();
-  }
+    const post = await getPostBySlug(slug);
+    
+    if (!post) {
+      notFound();
+    }
 
-  if (!post) {
-    notFound();
-  }
+    const currentUrl = `${process.env.NEXT_PUBLIC_SITE_URL || 'https://nischalneupane.com.np'}/blog/${slug}`;
+    const readingTime = Math.ceil(post.readTimeInMinutes || 5);
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
-  };
+    return (
+      <>
+        <ReadingProgress target="article" />
+        
+        {/* Floating Social Share */}
+        <SocialShare 
+          url={currentUrl}
+          title={post.title}
+          description={post.brief}
+          image={post.coverImage?.url}
+          variant="floating"
+        />
 
-  return (
-    <div className="min-h-screen bg-black text-green-500">
-      {/* Navigation Bar */}
-      <nav className="border-b border-gray-800 bg-black/90 backdrop-blur-sm sticky top-0 z-50">
-        <div className="max-w-6xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <Link 
-              href="/blog"
-              className="flex items-center gap-2 text-gray-400 hover:text-green-400 transition-colors"
-            >
-              ← Back to Blog
-            </Link>
-            <div className="flex items-center gap-4">
-              <button className="p-2 text-gray-400 hover:text-green-400 transition-colors">
-                <Share2 className="w-5 h-5" />
-              </button>
-              <a
+        {/* Floating Table of Contents */}
+        <TableOfContents 
+          content={post.content.html}
+          variant="floating"
+        />
+
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+          {/* Main Content */}
+          <article className="lg:col-span-3">
+            {/* Navigation */}
+            <div className="flex items-center justify-between mb-8">
+              <Link
+                href="/blog"
+                className="flex items-center space-x-2 text-terminal-green hover:text-terminal-green/80 transition-colors"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                <span>Back to Blog</span>
+              </Link>
+              
+              <Link
                 href={post.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-4 py-2 bg-green-600 text-black rounded-lg hover:bg-green-500 transition-colors font-medium"
+                className="flex items-center space-x-2 text-text-secondary hover:text-terminal-green transition-colors"
               >
-                View on Hashnode
-              </a>
+                <span>View on Hashnode</span>
+                <ExternalLink className="w-4 h-4" />
+              </Link>
             </div>
-          </div>
-        </div>
-      </nav>
 
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        {/* Post Header */}
-        <header className="mb-8">
-          {/* Series Banner */}
-          {post.series && (
-            <div className="mb-6 p-4 bg-gray-900 border border-gray-700 rounded-lg">
-              <div className="flex items-center gap-3 text-sm">
-                <BookOpen className="w-5 h-5 text-green-400" />
-                <span className="text-gray-400">Part of series:</span>
-                <Link
+            {/* Cover Image */}
+            {post.coverImage && (
+              <div className="mb-8 rounded-lg overflow-hidden">
+                <img 
+                  src={post.coverImage.url} 
+                  alt={post.title}
+                  className="w-full h-64 md:h-96 object-cover"
+                />
+              </div>
+            )}
+
+            {/* Header */}
+            <header className="mb-8">
+              <h1 className="text-3xl md:text-4xl font-bold text-text-primary mb-4">
+                {post.title}
+              </h1>
+              <p className="text-xl text-text-secondary mb-6">{post.brief}</p>
+              
+              {/* Meta Information */}
+              <div className="flex flex-wrap items-center gap-6 text-sm text-text-muted">
+                <div className="flex items-center gap-2">
+                  <User className="w-4 h-4" />
+                  <span>{post.author.name}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Calendar className="w-4 h-4" />
+                  <span>{format(new Date(post.publishedAt), 'MMM dd, yyyy')}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Clock className="w-4 h-4" />
+                  <span>{readingTime} min read</span>
+                </div>
+                {post.views && (
+                  <div className="flex items-center gap-2">
+                    <Eye className="w-4 h-4" />
+                    <span>{post.views} views</span>
+                  </div>
+                )}
+                {post.reactionCount && (
+                  <div className="flex items-center gap-2">
+                    <Heart className="w-4 h-4" />
+                    <span>{post.reactionCount} reactions</span>
+                  </div>
+                )}
+              </div>
+
+              {/* Tags */}
+              {post.tags && post.tags.length > 0 && (
+                <div className="flex flex-wrap gap-2 mt-4">
+                  {post.tags.map((tag) => (
+                    <Link
+                      key={tag.id}
+                      href={`/blog?tags=${encodeURIComponent(tag.name)}`}
+                      className="px-3 py-1 bg-gray-800 text-terminal-green rounded-full text-sm hover:bg-gray-700 transition-colors"
+                    >
+                      #{tag.name}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </header>
+
+            {/* Social Share - Horizontal */}
+            <div className="mb-8">
+              <SocialShare 
+                url={currentUrl}
+                title={post.title}
+                description={post.brief}
+                image={post.coverImage?.url}
+                variant="horizontal"
+                showLabels={true}
+              />
+            </div>
+
+            {/* Content */}
+            <div 
+              className="prose prose-lg prose-invert max-w-none mb-8"
+              dangerouslySetInnerHTML={{ __html: post.content.html }}
+            />
+
+            {/* Series Navigation */}
+            {post.series && (
+              <div className="mb-8 p-6 glass rounded-lg border border-terminal-green/20">
+                <h3 className="text-lg font-bold text-text-primary mb-4">
+                  Part of the &ldquo;{post.series.name}&rdquo; series
+                </h3>
+                <Link 
                   href={`/blog/series/${post.series.slug}`}
-                  className="text-green-400 hover:text-green-300 transition-colors font-medium"
+                  className="text-terminal-green hover:text-terminal-green/80 transition-colors"
                 >
-                  {post.series.name}
+                  View all posts in this series →
                 </Link>
-                <span className="text-gray-500">
-                  ({post.series.posts?.totalDocuments || 0} posts)
-                </span>
+              </div>
+            )}
+
+            {/* Bottom Actions */}
+            <div className="glass rounded-xl p-8 border border-terminal-green/20">
+              <div className="text-center mb-6">
+                <h3 className="text-xl font-bold text-text-primary mb-4">
+                  Enjoyed this article?
+                </h3>
+                <p className="text-text-secondary mb-6">
+                  Share it with others and let me know your thoughts!
+                </p>
+              </div>
+
+              {/* Social Share - Bottom */}
+              <div className="mb-6">
+                <SocialShare 
+                  url={currentUrl}
+                  title={post.title}
+                  description={post.brief}
+                  image={post.coverImage?.url}
+                  variant="horizontal"
+                  showLabels={true}
+                  className="justify-center"
+                />
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link
+                  href={post.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-terminal-green text-background px-6 py-3 rounded-lg hover:bg-terminal-green/90 transition-colors font-medium text-center"
+                >
+                  View on Hashnode
+                </Link>
+                <Link
+                  href="/blog"
+                  className="border border-terminal-green/30 text-terminal-green px-6 py-3 rounded-lg hover:bg-terminal-green/10 transition-colors font-medium text-center"
+                >
+                  Read More Articles
+                </Link>
               </div>
             </div>
-          )}
+          </article>
 
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-tight">
-            {post.title}
-          </h1>
-          
-          {post.subtitle && (
-            <p className="text-xl text-gray-400 mb-6">
-              {post.subtitle}
-            </p>
-          )}
-
-          {/* Post Meta */}
-          <div className="flex flex-wrap items-center gap-6 text-sm text-gray-500 mb-6">
-            <div className="flex items-center gap-2">
-              <img
-                src={post.author.profilePicture || '/default-avatar.png'}
-                alt={post.author.name}
-                className="w-8 h-8 rounded-full"
+          {/* Sidebar */}
+          <aside className="lg:col-span-1">
+            <div className="sticky top-24 space-y-6">
+              {/* Table of Contents */}
+              <TableOfContents 
+                content={post.content.html}
+                variant="sidebar"
+                className="hidden lg:block"
               />
-              <span className="text-green-400">{post.author.name}</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <Calendar className="w-4 h-4" />
-              <span>{formatDate(post.publishedAt)}</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <Clock className="w-4 h-4" />
-              <span>{post.readTimeInMinutes} min read</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <Eye className="w-4 h-4" />
-              <span>{post.views.toLocaleString()} views</span>
-            </div>
-          </div>
 
-          {/* Tags */}
-          {post.tags.length > 0 && (
-            <div className="flex flex-wrap gap-2 mb-8">
-              {post.tags.map((tag) => (
-                <span
-                  key={tag.id}
-                  className="px-3 py-1 bg-gray-800 text-green-400 text-sm rounded-full border border-gray-700"
-                >
-                  #{tag.name}
-                </span>
-              ))}
-            </div>
-          )}
-
-          {/* Cover Image */}
-          {post.coverImage && (
-            <div className="mb-8 rounded-lg overflow-hidden">
-              <img
-                src={post.coverImage.url}
-                alt={post.title}
-                className="w-full h-auto max-h-[500px] object-cover"
-              />
-            </div>
-          )}
-
-          {/* Engagement Actions */}
-          <div className="flex items-center justify-between py-4 border-y border-gray-800 mb-8">
-            <div className="flex items-center gap-6">
-              <button className="flex items-center gap-2 text-gray-400 hover:text-red-400 transition-colors">
-                <Heart className="w-5 h-5" />
-                <span>{post.reactionCount}</span>
-              </button>
-              <button className="flex items-center gap-2 text-gray-400 hover:text-blue-400 transition-colors">
-                <MessageCircle className="w-5 h-5" />
-                <span>{post.responseCount}</span>
-              </button>
-            </div>
-            <button className="flex items-center gap-2 text-gray-400 hover:text-green-400 transition-colors">
-              <Share2 className="w-5 h-5" />
-              <span>Share</span>
-            </button>
-          </div>
-        </header>
-
-        {/* Post Content */}
-        <article className="prose prose-invert prose-green max-w-none">
-          <div 
-            className="blog-content"
-            dangerouslySetInnerHTML={{ __html: post.content.html }}
-          />
-        </article>
-
-        {/* Post Footer */}
-        <footer className="mt-12 pt-8 border-t border-gray-800">
-          {/* Author Bio */}
-          <div className="bg-gray-900 border border-gray-700 rounded-lg p-6 mb-8">
-            <div className="flex items-start gap-4">
-              <img
-                src={post.author.profilePicture || '/default-avatar.png'}
-                alt={post.author.name}
-                className="w-16 h-16 rounded-full"
-              />
-              <div>
-                <h3 className="text-xl font-bold text-green-400 mb-2">
-                  {post.author.name}
-                </h3>
-                {post.author.bio?.text && (
-                  <p className="text-gray-400 mb-3">
-                    {post.author.bio.text}
+              {/* Author Info */}
+              <div className="glass rounded-lg p-6">
+                <h3 className="text-lg font-bold text-text-primary mb-4">About the Author</h3>
+                <div className="flex items-center gap-3 mb-4">
+                  {post.author.profilePicture && (
+                    <img 
+                      src={post.author.profilePicture} 
+                      alt={post.author.name}
+                      className="w-12 h-12 rounded-full"
+                    />
+                  )}
+                  <div>
+                    <div className="font-medium text-text-primary">{post.author.name}</div>
+                    <div className="text-sm text-text-muted">Developer & Writer</div>
+                  </div>
+                </div>
+                {post.author.bio && (
+                  <p className="text-text-secondary text-sm">
+                    {typeof post.author.bio === 'string' ? post.author.bio : post.author.bio.text}
                   </p>
                 )}
-                <div className="flex items-center gap-4">
-                  {post.author.socialMediaLinks?.website && (
-                    <a
-                      href={post.author.socialMediaLinks.website}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-sm text-green-400 hover:text-green-300 transition-colors"
-                    >
-                      Website
-                    </a>
-                  )}
-                  {post.author.socialMediaLinks?.twitter && (
-                    <a
-                      href={post.author.socialMediaLinks.twitter}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-sm text-green-400 hover:text-green-300 transition-colors"
-                    >
-                      Twitter
-                    </a>
-                  )}
-                  {post.author.socialMediaLinks?.github && (
-                    <a
-                      href={post.author.socialMediaLinks.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-sm text-green-400 hover:text-green-300 transition-colors"
-                    >
-                      GitHub
-                    </a>
-                  )}
-                </div>
               </div>
-            </div>
-          </div>
 
-          {/* Related Posts */}
-          {relatedPosts && relatedPosts.length > 0 && (
-            <div>
-              <h2 className="text-2xl font-bold mb-6">Related Posts</h2>
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {relatedPosts.map((relatedPost) => (
-                  <RelatedPostCard key={relatedPost.id} post={relatedPost} />
-                ))}
-              </div>
+              {/* Related Tags */}
+              {post.tags && post.tags.length > 0 && (
+                <div className="glass rounded-lg p-6">
+                  <h3 className="text-lg font-bold text-text-primary mb-4">Related Tags</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {post.tags.map((tag) => (
+                      <Link
+                        key={tag.id}
+                        href={`/blog?tags=${encodeURIComponent(tag.name)}`}
+                        className="px-3 py-1 bg-gray-800 text-terminal-green rounded-full text-sm hover:bg-gray-700 transition-colors"
+                      >
+                        #{tag.name}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
-          )}
-        </footer>
-      </div>
-    </div>
-  );
+          </aside>
+        </div>
+      </>
+    );
+  } catch (error) {
+    notFound();
+  }
 }
 
-function RelatedPostCard({ post }: { post: any }) {
+export default function BlogPostPage({ params }: BlogPostPageProps) {
   return (
-    <article className="bg-gray-900 border border-gray-700 rounded-lg overflow-hidden hover:border-green-500 transition-colors group">
-      {post.coverImage && (
-        <div className="aspect-video overflow-hidden">
-          <img
-            src={post.coverImage.url}
-            alt={post.title}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-          />
-        </div>
-      )}
-      <div className="p-4">
-        <h3 className="font-bold mb-2 text-sm group-hover:text-green-400 transition-colors line-clamp-2">
-          <Link href={`/blog/${post.slug}`}>
-            {post.title}
-          </Link>
-        </h3>
-        <p className="text-gray-400 text-xs mb-3 line-clamp-2">
-          {post.brief}
-        </p>
-        <div className="flex items-center justify-between text-xs text-gray-500">
-          <time>{new Date(post.publishedAt).toLocaleDateString()}</time>
-          <span>{post.readTimeInMinutes} min</span>
-        </div>
+    <div className="min-h-screen bg-background pt-20">
+      <div className="max-w-6xl mx-auto px-4 py-12">
+        <Suspense fallback={<LoadingSpinner size="large" text="Loading article..." />}>
+          <BlogPostContent slug={params.slug} />
+        </Suspense>
       </div>
-    </article>
+    </div>
   );
 }

@@ -5,6 +5,110 @@ All notable changes to Nischal Neupane Portfolio will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.1] - 2025-09-22
+
+### 🧪 **TESTING RELEASE - Enterprise-Level Testing Suite**
+
+#### ✨ Added
+- **Comprehensive Testing Suite**: 112+ tests covering all components, pages, and API routes
+- **Component Testing**: Complete coverage for Navbar, Footer, ParticleBackground components  
+- **Page Testing**: Full testing for Home, About, Contact, Skills-Projects pages
+- **API Testing**: Complete coverage for revalidation endpoints with security testing
+- **Blog System Testing**: 19 passing tests for blog components and Hashnode integration
+- **Utility Testing**: GraphQL client and helper function testing
+- **Accessibility Testing**: WCAG compliance testing with ARIA validation
+- **User Interaction Testing**: Form submissions, navigation, email functionality
+- **Error Handling Testing**: API failures, network errors, graceful degradation
+- **Performance Testing**: Component rendering efficiency and memory management
+
+#### 🔧 Enhanced
+- **Documentation**: Updated README.md with comprehensive testing information
+- **Project Description**: Enhanced to highlight enterprise-level testing capabilities
+- **Test Configuration**: Optimized Jest setup with proper TypeScript integration
+- **Mock Strategies**: Sophisticated mocking for external dependencies and browser APIs
+
+#### 🛠️ Technical Improvements
+- **Component Isolation**: Each component tested independently with proper mocking
+- **Integration Testing**: End-to-end workflows and user journey testing
+- **Error Boundaries**: Graceful error handling and recovery testing
+- **Responsive Testing**: Mobile and desktop interaction validation
+- **Animation Testing**: Framer Motion integration testing with proper mocking
+
+#### ⚡ Testing Infrastructure
+- **Jest Configuration**: Custom setup with TypeScript support and JSDOM environment
+- **React Testing Library**: Comprehensive component rendering and interaction testing
+- **Test Organization**: Logical grouping by feature and component type
+- **Coverage Reporting**: Detailed test coverage metrics and reporting
+- **CI/CD Ready**: Test suite optimized for automated deployment workflows
+
+#### 🎯 Quality Assurance
+- **Production Ready**: Enterprise-level testing ensures deployment confidence
+- **Type Safety**: Full TypeScript integration in test suite
+- **Maintainability**: Modular test structure for easy extension
+- **Documentation**: Well-documented test cases and expectations
+- **Scalability**: Test architecture designed for future growth
+
+## [2.0.0] - 2024-12-20
+
+### 🎉 MAJOR RELEASE - Complete Blog System Implementation
+
+#### ✨ Added
+- **Complete Blog System**: Comprehensive blog implementation with Hashnode GraphQL API v2 integration
+- **Advanced Search & Filtering**: Real-time search across all blog posts with tag filtering and sorting
+- **Reading Progress Indicator**: Visual progress tracking while reading blog posts
+- **Social Sharing**: Share blog posts on Twitter, LinkedIn, Facebook, and other platforms
+- **Table of Contents**: Auto-generated navigation for long blog posts
+- **Blog Analytics**: Track page views and engagement metrics
+- **RSS Feed Generation**: Automatic RSS feed for blog subscribers (`/rss.xml`)
+- **Sitemap Generation**: SEO-optimized sitemap with all pages (`/sitemap.xml`)
+- **Series Support**: Dedicated pages for blog series (temporarily disabled due to API compatibility)
+
+#### 🏗️ Architecture Improvements
+- **Modular Component System**: 16 reusable blog components with full TypeScript support
+- **GraphQL Integration**: Robust Hashnode API v2 integration with proper error handling and caching
+- **Performance Optimization**: Implemented Next.js unstable_cache and static generation strategies
+- **Client/Server Separation**: Proper separation of client and server components for optimal performance
+- **Error Handling**: Comprehensive error boundaries and graceful fallback states
+
+#### 🎨 Design Enhancements
+- **Glassmorphism UI**: Enhanced visual effects for blog components with terminal-inspired design
+- **Responsive Design**: Mobile-optimized blog interface with touch-friendly interactions
+- **Loading States**: Smooth loading indicators and skeleton screens throughout the blog
+- **Dark Mode Integration**: Consistent theming across all blog components
+
+#### 🔧 Technical Updates
+- **Next.js 14.2.32**: Latest stable version with app router and production optimizations
+- **TypeScript Strict Mode**: Full type safety across all components with zero build warnings
+- **Build Optimization**: Clean production builds with 87.2kB shared JS bundle
+- **API Rate Limiting**: Respect Hashnode API limits with proper pagination (50 posts max)
+
+#### 📦 New Components
+- `SearchAndFilter.tsx` - Advanced search and filtering interface
+- `ReadingProgress.tsx` - Reading progress indicator
+- `SocialShare.tsx` - Social media sharing buttons
+- `TableOfContents.tsx` - Auto-generated table of contents
+- `BlogAnalytics.tsx` - Analytics tracking component
+- `LoadingSpinner.tsx` - Reusable loading indicators
+- `ErrorState.tsx` - Error handling and retry mechanisms
+
+#### 🐛 Bug Fixes
+- Fixed build errors related to client/server component separation
+- Resolved GraphQL API compatibility issues with series functionality
+- Fixed RSS and sitemap generation during build process with proper error handling
+- Corrected TypeScript type errors across all components
+- Removed legacy components that conflicted with the new system
+
+#### 📊 Performance Metrics
+- **Successful Build**: ✓ Compiled successfully with zero errors
+- **Bundle Size**: 87.2kB shared JS (optimized)
+- **Static Pages**: 14/14 pages generated successfully
+- **API Efficiency**: Optimized GraphQL queries with proper caching
+
+#### 🗑️ Removed
+- Legacy `BlogContainer.tsx`, `TagFilter.tsx`, `ReadingProgress.tsx` (old versions)
+- Conflicting image utilities and deprecated API methods
+- Unused dependencies and outdated component patterns
+
 ## [1.0.4] - 2025-09-10
 
 ### 🎨 Blog System Overhaul

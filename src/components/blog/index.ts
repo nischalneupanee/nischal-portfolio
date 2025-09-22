@@ -1,7 +1,16 @@
 export { default as BlogHeader } from './BlogHeader';
 export { default as FeaturedPost } from './FeaturedPost';
 export { default as PostCard } from './PostCard';
+export { default as SeriesCard } from './SeriesCard';
 export { default as BlogSidebar } from './BlogSidebar';
 export { default as LoadingSpinner } from './LoadingSpinner';
 export { default as ErrorState } from './ErrorState';
 export { default as AdvancedSearch } from './AdvancedSearch';
+export { default as SearchAndFilter } from './SearchAndFilter';
+export { default as SearchAndFilterClient } from './SearchAndFilterClient';
+export { default as ReadingProgress } from './ReadingProgress';
+export { default as SocialShare } from './SocialShare';
+export { default as TableOfContents } from './TableOfContents';
+export { default as BlogAnalytics } from './BlogAnalytics';
+export { default as AdvancedBlogSearch } from './AdvancedBlogSearch';
+export { default as OptimizedImage } from './OptimizedImage';

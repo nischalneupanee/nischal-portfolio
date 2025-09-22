@@ -1,4 +1,4 @@
-import { BlogPost } from '@/lib/hashnode';
+import { BlogPost } from '@/lib/types';
 import Link from 'next/link';
 
 interface FeaturedPostProps {

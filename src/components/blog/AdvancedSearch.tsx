@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { BlogPost } from '@/lib/hashnode';
+import { BlogPost } from '@/lib/types';
 import { Search, Filter, X } from 'lucide-react';
 
 interface AdvancedSearchProps {
@@ -197,7 +197,7 @@ export default function AdvancedSearch({ posts, onFilteredPosts }: AdvancedSearc
               <div className="flex flex-wrap gap-2">
                 {searchTerm && (
                   <span className="flex items-center gap-2 px-3 py-1 bg-blue-600 text-white rounded-full text-sm">
-                    Search: "{searchTerm}"
+                    Search: &ldquo;{searchTerm}&rdquo;
                     <button
                       onClick={() => setSearchTerm('')}
                       className="hover:text-gray-300"

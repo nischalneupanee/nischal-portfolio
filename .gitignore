@@ -74,3 +74,23 @@ pids
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Internal documentation (not for GitHub)
+README_INTERNAL.md
+BLOG_IMPLEMENTATION_COMPLETE.md
+BLOG_IMPLEMENTATION_SUMMARY.md
+BLOG_IMPROVEMENTS_V1.0.4.md
+BLOG_README.md
+BLOG_REDESIGN_DOCUMENTATION.md
+BLOG_SYSTEM_COMPLETE_V1.0.4.md
+DEPLOYMENT-GUIDE.md
+DEPLOYMENT.md
+HASHNODE_INTEGRATION.md
+PERFORMANCE.md
+PRODUCTION-CHECKLIST.md
+RELEASE_SUMMARY.md
+blogimplementationguide.md
+
+# Test files not for production
+test-api.js
+test-final.js
