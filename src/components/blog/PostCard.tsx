@@ -25,11 +25,12 @@ export default function PostCard({ post, variant = 'default' }: PostCardProps) {
       <motion.article
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        whileHover={{ y: -2 }}
-        className="glass rounded-lg p-4 border border-terminal-green/20 hover:border-terminal-green/40 transition-all duration-300"
+        whileHover={{ y: -4, scale: 1.02 }}
+        transition={{ type: "spring", stiffness: 300, damping: 20 }}
+        className="glass rounded-lg p-4 border border-terminal-green/20 hover:border-terminal-green/40 hover:shadow-lg hover:shadow-terminal-green/10 transition-all duration-300 group"
       >
         <Link href={`/blog/${post.slug}`} className="block">
-          <h3 className="font-bold text-text-primary hover:text-terminal-green transition-colors line-clamp-2 mb-2">
+          <h3 className="font-bold text-text-primary group-hover:text-terminal-green transition-colors line-clamp-2 mb-2">
             {post.title}
           </h3>
           <p className="text-text-secondary text-sm line-clamp-2 mb-3">{post.brief}</p>
@@ -53,40 +54,48 @@ export default function PostCard({ post, variant = 'default' }: PostCardProps) {
       <motion.article
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        whileHover={{ y: -4 }}
-        className="glass rounded-xl overflow-hidden border border-terminal-green/30 hover:border-terminal-green/50 transition-all duration-300 group"
+        whileHover={{ y: -6, scale: 1.02 }}
+        transition={{ type: "spring", stiffness: 300, damping: 25 }}
+        className="glass rounded-xl overflow-hidden border-2 border-terminal-green/40 hover:border-terminal-green/60 hover:shadow-2xl hover:shadow-terminal-green/20 transition-all duration-500 group relative"
       >
+        {/* Featured Badge */}
+        <div className="absolute top-4 left-4 z-10">
+          <span className="bg-terminal-green text-background text-xs font-bold px-2 py-1 rounded-full">
+            FEATURED
+          </span>
+        </div>
+        
         {post.coverImage && (
-          <div className="relative h-48 overflow-hidden">
+          <div className="relative h-64 overflow-hidden">
             <Image
               src={post.coverImage.url}
               alt={post.title}
               fill
-              className="object-cover group-hover:scale-105 transition-transform duration-300"
+              className="object-cover group-hover:scale-110 transition-transform duration-500"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-background/60 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-background/20 to-transparent" />
           </div>
         )}
         <div className="p-6">
-          <div className="flex items-center space-x-4 text-sm text-text-muted mb-3">
+          <div className="flex items-center space-x-4 text-sm text-text-muted mb-4">
             <span className="flex items-center space-x-1">
-              <Calendar className="w-4 h-4" />
+              <Calendar className="w-4 h-4 text-terminal-green" />
               <span>{formatDate(post.publishedAt)}</span>
             </span>
             <span className="flex items-center space-x-1">
-              <Clock className="w-4 h-4" />
+              <Clock className="w-4 h-4 text-terminal-green" />
               <span>{post.readTimeInMinutes} min read</span>
             </span>
             {post.views > 0 && (
               <span className="flex items-center space-x-1">
-                <Eye className="w-4 h-4" />
+                <Eye className="w-4 h-4 text-terminal-green" />
                 <span>{post.views.toLocaleString()}</span>
               </span>
             )}
           </div>
           
           <Link href={`/blog/${post.slug}`}>
-            <h2 className="text-xl font-bold text-text-primary hover:text-terminal-green transition-colors mb-3 line-clamp-2">
+            <h2 className="text-2xl font-bold text-text-primary group-hover:text-terminal-green transition-colors mb-4 line-clamp-2">
               {post.title}
             </h2>
           </Link>
@@ -95,7 +104,7 @@ export default function PostCard({ post, variant = 'default' }: PostCardProps) {
             <p className="text-text-secondary font-medium mb-3 line-clamp-1">{post.subtitle}</p>
           )}
           
-          <p className="text-text-secondary line-clamp-3 mb-4">{post.brief}</p>
+          <p className="text-text-secondary line-clamp-3 mb-6">{post.brief}</p>
           
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
@@ -158,8 +167,9 @@ export default function PostCard({ post, variant = 'default' }: PostCardProps) {
     <motion.article
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      whileHover={{ y: -2 }}
-      className="glass rounded-lg p-6 border border-terminal-green/20 hover:border-terminal-green/40 transition-all duration-300 group"
+      whileHover={{ y: -4, x: 2 }}
+      transition={{ type: "spring", stiffness: 300, damping: 20 }}
+      className="glass rounded-lg p-6 border border-terminal-green/20 hover:border-terminal-green/40 hover:shadow-lg hover:shadow-terminal-green/10 transition-all duration-300 group"
     >
       <div className="flex gap-6">
         {post.coverImage && (
@@ -168,7 +178,7 @@ export default function PostCard({ post, variant = 'default' }: PostCardProps) {
               src={post.coverImage.url}
               alt={post.title}
               fill
-              className="object-cover group-hover:scale-105 transition-transform duration-300"
+              className="object-cover group-hover:scale-110 transition-transform duration-300"
             />
           </div>
         )}
@@ -176,23 +186,23 @@ export default function PostCard({ post, variant = 'default' }: PostCardProps) {
         <div className="flex-1 space-y-3">
           <div className="flex items-center space-x-4 text-sm text-text-muted">
             <span className="flex items-center space-x-1">
-              <Calendar className="w-4 h-4" />
+              <Calendar className="w-4 h-4 text-terminal-green" />
               <span>{formatDate(post.publishedAt)}</span>
             </span>
             <span className="flex items-center space-x-1">
-              <Clock className="w-4 h-4" />
+              <Clock className="w-4 h-4 text-terminal-green" />
               <span>{post.readTimeInMinutes} min read</span>
             </span>
             {post.views > 0 && (
               <span className="flex items-center space-x-1">
-                <Eye className="w-4 h-4" />
+                <Eye className="w-4 h-4 text-terminal-green" />
                 <span>{post.views.toLocaleString()}</span>
               </span>
             )}
           </div>
           
           <Link href={`/blog/${post.slug}`}>
-            <h3 className="text-lg font-bold text-text-primary hover:text-terminal-green transition-colors line-clamp-2">
+            <h3 className="text-lg font-bold text-text-primary group-hover:text-terminal-green transition-colors line-clamp-2">
               {post.title}
             </h3>
           </Link>

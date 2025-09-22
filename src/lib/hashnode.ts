@@ -46,6 +46,12 @@ export async function getPosts(first: number = 20, after?: string): Promise<Post
     return data;
   } catch (error) {
     console.error('Error fetching posts:', error);
+    
+    // Check if it's a network error
+    if (error instanceof Error && (error.message.includes('ETIMEDOUT') || error.message.includes('fetch'))) {
+      console.log('Network timeout detected, this might be temporary. The blog will retry automatically.');
+    }
+    
     throw new Error('Failed to fetch posts');
   }
 }
@@ -164,7 +170,8 @@ export async function getPopularTags(): Promise<Tag[]> {
       .map(({ count, ...tag }) => tag);
   } catch (error) {
     console.error('Error fetching popular tags:', error);
-    throw new Error('Failed to fetch popular tags');
+    // Return empty array as fallback instead of throwing
+    return [];
   }
 }
 
@@ -180,6 +187,7 @@ export async function getRecentPosts(first: number = 5): Promise<BlogPost[]> {
     return data.publication.posts.edges.map(({ node }) => node);
   } catch (error) {
     console.error('Error fetching recent posts:', error);
-    throw new Error('Failed to fetch recent posts');
+    // Return empty array as fallback instead of throwing
+    return [];
   }
 }

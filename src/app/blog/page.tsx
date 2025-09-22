@@ -7,7 +7,10 @@ import {
   ErrorState, 
   ReadingProgress
 } from '@/components/blog';
+import PostCardSkeleton from '@/components/blog/PostCardSkeleton';
+import BlogLoading from '@/components/blog/BlogLoading';
 import SearchAndFilterClient from '@/components/blog/SearchAndFilterClient';
+import NewsletterSubscription from '@/components/blog/NewsletterSubscription';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
@@ -113,7 +116,7 @@ async function BlogContent({ searchParams }: { searchParams: BlogPageProps['sear
           </div>
 
           {/* Enhanced Search and Filter */}
-          <SearchAndFilterClient 
+          <SearchAndFilterClient
             availableTags={tagsWithCount}
             totalResults={filteredPosts.length}
             initialValues={{
@@ -124,8 +127,40 @@ async function BlogContent({ searchParams }: { searchParams: BlogPageProps['sear
             }}
           />
 
-          {/* Posts */}
-          {filteredPosts.length === 0 ? (
+          {/* Featured Post */}
+          {filteredPosts.length > 0 && (
+            <div className="space-y-6">
+              <div className="flex items-center justify-between">
+                <h2 className="text-2xl font-bold text-text-primary">
+                  Featured <span className="text-terminal-green">Article</span>
+                </h2>
+                <span className="text-sm text-text-muted">Latest Post</span>
+              </div>
+              <PostCard post={filteredPosts[0]} variant="featured" />
+            </div>
+          )}
+
+          {/* Latest Posts */}
+          {filteredPosts.length > 1 && (
+            <div className="space-y-6">
+              <div className="flex items-center justify-between">
+                <h2 className="text-2xl font-bold text-text-primary">
+                  Latest <span className="text-terminal-green">Articles</span>
+                </h2>
+                <span className="text-sm text-text-muted">
+                  {filteredPosts.length - 1} more {filteredPosts.length - 1 === 1 ? 'article' : 'articles'}
+                </span>
+              </div>
+              <div className="grid gap-6">
+                {filteredPosts.slice(1).map((post) => (
+                  <PostCard key={post.id} post={post} variant="default" />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* No Posts Message */}
+          {filteredPosts.length === 0 && (
             <div className="text-center py-12 glass rounded-lg">
               <h2 className="text-2xl font-bold text-text-primary mb-4">
                 No posts found
@@ -135,25 +170,20 @@ async function BlogContent({ searchParams }: { searchParams: BlogPageProps['sear
               </p>
               <Link
                 href="/blog"
-                className="inline-flex items-center px-6 py-3 bg-terminal-green text-black rounded-lg hover:bg-terminal-green/80 transition-colors font-medium"
+                className="inline-flex items-center px-6 py-3 bg-terminal-green text-white rounded-lg hover:bg-terminal-green/80 transition-colors font-medium"
               >
                 View All Posts
               </Link>
             </div>
-          ) : (
-            <div className="space-y-6">
-              <div className="flex items-center justify-between">
-                <h2 className="text-2xl font-bold text-text-primary">
-                  {searchQuery ? 'Search Results' : 'Latest Posts'}
-                </h2>
-                <span className="text-sm text-text-muted">
-                  {filteredPosts.length} post{filteredPosts.length !== 1 ? 's' : ''}
-                </span>
-              </div>
+          )}
 
-              {filteredPosts.map((post) => (
-                <PostCard key={post.id} post={post} />
-              ))}
+          {/* Newsletter Subscription */}
+          {filteredPosts.length > 0 && (
+            <div className="mt-12">
+              <NewsletterSubscription 
+                title="Never Miss a Post"
+                description="Get the latest tutorials and insights delivered straight to your inbox"
+              />
             </div>
           )}
         </div>
@@ -173,7 +203,7 @@ export default function BlogPage({ searchParams }: BlogPageProps) {
   return (
     <div className="min-h-screen bg-background pt-20">
       <div className="max-w-6xl mx-auto px-4 py-12">
-        <Suspense fallback={<LoadingSpinner size="large" text="Loading blog posts..." />}>
+        <Suspense fallback={<BlogLoading />}>
           <BlogContent searchParams={searchParams} />
         </Suspense>
       </div>

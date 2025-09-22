@@ -2,7 +2,7 @@
 
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCallback } from 'react';
-import { SearchAndFilter } from '@/components/blog';
+import MinimalSearch from './MinimalSearch';
 
 interface SearchAndFilterClientProps {
   availableTags: Array<{ name: string; count: number }>;
@@ -13,6 +13,12 @@ interface SearchAndFilterClientProps {
     dateFrom?: string;
     dateTo?: string;
   };
+}
+
+interface BlogFilters {
+  search: string;
+  tags: string[];
+  sortBy: 'newest' | 'popular';
 }
 
 export default function SearchAndFilterClient({ 
@@ -51,22 +57,18 @@ export default function SearchAndFilterClient({
     updateURL({ search: query });
   }, [updateURL]);
 
-  const handleTagFilter = useCallback((tags: string[]) => {
-    updateURL({ tags });
-  }, [updateURL]);
-
-  const handleDateFilter = useCallback((dateRange: { start?: string; end?: string }) => {
+  const handleFilterChange = useCallback((filters: BlogFilters) => {
     updateURL({ 
-      dateFrom: dateRange.start || '',
-      dateTo: dateRange.end || ''
+      search: filters.search,
+      tags: filters.tags,
+      sort: filters.sortBy
     });
   }, [updateURL]);
 
   return (
-    <SearchAndFilter
+    <MinimalSearch
       onSearchChange={handleSearchChange}
-      onTagFilter={handleTagFilter}
-      onDateFilter={handleDateFilter}
+      onFilterChange={handleFilterChange}
       availableTags={availableTags}
       totalResults={totalResults}
     />

@@ -135,7 +135,7 @@ export const GET_POST_BY_SLUG = `
             name
             username
           }
-          posts {
+          posts(first: 10) {
             totalDocuments
             edges {
               node {
@@ -188,7 +188,7 @@ export const GET_PUBLICATION_SERIES = `
               username
               profilePicture
             }
-            posts {
+            posts(first: 10) {
               totalDocuments
               edges {
                 node {
@@ -239,7 +239,7 @@ export const GET_SERIES_BY_SLUG = `
             linkedin
           }
         }
-        posts {
+        posts(first: 10) {
           totalDocuments
           edges {
             node {
