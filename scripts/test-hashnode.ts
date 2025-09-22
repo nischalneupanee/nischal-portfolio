@@ -4,14 +4,12 @@
  */
 
 import { 
-  getBlogPosts, 
-  getBlogPostBySlug, 
-  getLatestPosts,
-  getFeaturedPosts,
-  getPopularPosts,
-  getAllTags,
-  getPublicationStats,
-  searchBlogPosts
+  getPosts, 
+  getPostBySlug, 
+  getRecentPosts,
+  getBlogStats,
+  getPopularTags,
+  getSeries
 } from '../src/lib/hashnode';
 
 async function testHashnodeIntegration() {

@@ -28,8 +28,8 @@ import type {
   Publication,
 } from './types';
 
-// Hashnode publication host (replace with your actual Hashnode domain)
-const PUBLICATION_HOST = 'blog.nischalneupane.com.np';
+// Hashnode publication host (from environment variables)
+const PUBLICATION_HOST = process.env.HASHNODE_PUBLICATION_HOST || process.env.NEXT_PUBLIC_HASHNODE_PUBLICATION_HOST || 'nischalneupane.hashnode.dev';
 
 /**
  * Fetch all posts from the publication with pagination
